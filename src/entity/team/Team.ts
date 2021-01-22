@@ -1,4 +1,5 @@
 import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
+import { Comp } from "../comp/Comp";
 import { User } from '../User'
 import { TeamMember } from "./TeamMember";
 import { TeamSubmition } from "./TeamSubmition";
@@ -26,6 +27,10 @@ export class Team {
     @OneToOne(type => User)
     @JoinColumn()
     user: User
+
+    @OneToOne(type => Comp)
+    @JoinColumn()
+    comp: Comp
 
     @OneToMany(type => TeamMember, teamMember => teamMember.team)
     teamMembers: TeamMember[]

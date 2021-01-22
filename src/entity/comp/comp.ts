@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryColumn, OneToMany } from "typeorm";
+import { CompPoint } from "./CompPoint";
+import { CompStage } from "./CompStage";
 
 enum CompName {
     iot = "IoT Development",
@@ -17,5 +19,11 @@ export class Comp {
         length: 30
     })
     comp_name: CompName
+
+    @OneToMany(type => CompStage, compStage => compStage.comp)
+    compStages: CompStage[]
+
+    @OneToMany(type => CompPoint, compPoint => compPoint.comp)
+    compPoints: CompPoint[]
 
 }

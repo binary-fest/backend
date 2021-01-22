@@ -1,8 +1,9 @@
-import { Column, Entity, PrimaryColumn, ManyToOne } from "typeorm";
+import { Column, Entity, PrimaryColumn, ManyToOne, OneToMany } from "typeorm";
 import { Team } from "./Team";
+import { TeamSubmitionPoint } from "./TeamSubmitionPoint";
 
 enum SubmitionType {
-    inovasi = "inovasi",
+    proposal = "proposal",
     video = "video"
 }
 
@@ -37,5 +38,8 @@ export class TeamSubmition {
 
     @ManyToOne(type => Team, team => team.teamSubmitions)
     team: Team
+
+    @OneToMany(type => TeamSubmitionPoint, teamSubmition => teamSubmition.teamSubmition)
+    teamSubmitionPoints: TeamSubmitionPoint[]
 
 }
