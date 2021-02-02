@@ -4,7 +4,6 @@ import {NextFunction, Request, Response} from "express";
 
 import { User } from "../entity/User";
 import config from '../config/config'
-import { validate } from "class-validator";
 
 export class AuthController {
 
@@ -55,13 +54,7 @@ export class AuthController {
         user.username = username
         user.password = password
         user.role = role
-        
-        const errors = await validate(user)
-
-        if (errors.length > 0) {
-            res.status(400).json({ errors });
-            
-        }
+    
 
         user.hashPassword()
         

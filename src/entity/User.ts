@@ -1,4 +1,3 @@
-import { Length } from "class-validator";
 import {Entity, Column, PrimaryColumn} from "typeorm";
 import * as bcrypt from 'bcryptjs'
 
@@ -14,11 +13,9 @@ export class User {
         length: 20,
         unique: true
     })
-    @Length(8, 20)
     username: string
 
     @Column()
-    @Length(8, 50)
     password: string
 
     @Column({ length: 5 })
