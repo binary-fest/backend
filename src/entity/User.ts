@@ -11,7 +11,8 @@ enum Role{
 export class User {
 
     @PrimaryColumn({
-        length: 20
+        length: 20,
+        unique: true
     })
     @Length(8, 20)
     username: string

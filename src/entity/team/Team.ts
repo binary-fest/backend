@@ -1,36 +1,34 @@
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
-import { User } from '../User'
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamMember } from "./TeamMember";
-import { TeamSubmition } from "./TeamSubmition";
+import { TeamToken } from "./TeamToken";
 
 @Entity()
 export class Team {
 
-    @PrimaryColumn("char", {
-        length: 7
+    @PrimaryGeneratedColumn()
+    id_team: number
+
+    @Column()
+    name: String
+
+    @Column()
+    judul: string
+
+    @Column()
+    instansi: string
+
+    @Column({
+        nullable: true
     })
-    id_team: string
+    proposal_url: string
 
     @Column()
-    team_name: String
-
-    @Column("text")
-    title_idea: string
-
-    @Column('json')
-    leader_biodata: JSON
-
-    @Column()
-    agency_name: string
-
-    @OneToOne(type => User)
-    @JoinColumn()
-    user: User
+    video_url: string
 
     @OneToMany(type => TeamMember, teamMember => teamMember.team)
     teamMembers: TeamMember[]
 
-    @OneToMany(type => TeamSubmition, teamSubmition => teamSubmition.team)
-    teamSubmitions: TeamSubmition[]
+    @OneToMany(type => TeamToken, teamToken => teamToken.team)
+    teamTokens: TeamToken[]
 
 }

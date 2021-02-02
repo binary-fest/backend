@@ -1,41 +1,21 @@
 import { AuthController } from "./controller/AuthController";
-import {UserController} from "./controller/UserController";
 import { checkJwt } from "./middleware/checkJwt";
 import { checkRole } from './middleware/checkRole'
+import { noCheck } from "./middleware/noCheck";
 
-export const Routes = [{
-    method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all",
-    middleware: [checkJwt]
-}, {
-    method: "get",
-    route: "/users/:id",
-    controller: UserController,
-    action: "one"
-}, {
-    method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save"
-}, {
-    method: "delete",
-    route: "/users/:id",
-    controller: UserController,
-    action: "remove"
-}, 
+export const Routes = [
 
 // auth routes
 
 {
     method: "post",
-    route: "/auth/login",
+    route: "/api/auth/login",
     controller: AuthController,
-    action: "login"
+    action: "login",
+    middleware: noCheck
 }, {
     method: "post",
-    route: "/auth/register",
+    route: "/api/auth/register",
     controller: AuthController,
     action: "register"
 }

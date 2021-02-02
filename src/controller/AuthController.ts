@@ -57,24 +57,39 @@ export class AuthController {
         user.role = role
         
         const errors = await validate(user)
+
         if (errors.length > 0) {
             res.status(400).json({ errors });
-            return;
+            
         }
 
         user.hashPassword()
-
-        try {
-            await this.userRepository.save(user)
-        } catch (error) {
-            res.status(409).json({
-                message: "Username already in use"
-            })
-        }
-
-        res.status(201).json({
-            message: "User created"
+        
+        await this.userRepository.findOneOrFail({
+            where: {
+                username
+            }
         })
+        .then(() => {
+            res.status(409).json({
+                message: "username already in use"
+            })
+        })
+        .catch(async () => {
+            await this.userRepository.save(user)
+            .then(() => {
+                res.status(200).json({
+                    message: "username was created"
+                })
+            })
+            .catch((error) => {
+                res.status(400).json({
+                    message: "error occured",
+                    error: error.message
+                })
+            })
+        })
+
     }
 
     // async logout(req: Request, res: Response, next: NextFunction){
