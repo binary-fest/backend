@@ -7,9 +7,10 @@ import * as helmet from "helmet";
 import * as cors from "cors";
 import * as compression from "compression"
 import * as rateLimit from 'express-rate-limit'
+import * as dotenv from 'dotenv'
 import {Routes} from "./routes";
 
-require('dotenv').config()
+dotenv.config()
 
 createConnection().then(async connection => {
     // create express app
