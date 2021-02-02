@@ -1,17 +1,23 @@
+import { Length } from "class-validator";
 import {Entity, Column, PrimaryColumn} from "typeorm";
+import * as bcrypt from 'bcryptjs'
 
 enum Role{
-    master = "master",
-    user = "user"
+    admin = "ADMIN",
+    user = "USER"
 }
 
 @Entity()
 export class User {
 
-    @PrimaryColumn()
+    @PrimaryColumn({
+        length: 20
+    })
+    @Length(8, 20)
     username: string
 
     @Column()
+    @Length(8, 50)
     password: string
 
     @Column({ length: 5 })
@@ -22,5 +28,13 @@ export class User {
 
     @Column({ default: () => "CURRENT_TIMESTAMP" })
     updatedAt: Date
+
+    hashPassword(){
+        this.password = bcrypt.hashSync(this.password, 8)
+    }
+
+    checkIfUnencryptedPasswordIsValid(unencryptedPassword: string): Boolean {
+        return bcrypt.compareSync(unencryptedPassword, this.password);
+    }
 
 }
