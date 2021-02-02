@@ -5,15 +5,25 @@ import * as bodyParser from "body-parser";
 import {Request, Response} from "express";
 import * as helmet from "helmet";
 import * as cors from "cors";
+import * as compression from "compression"
+import * as rateLimit from 'express-rate-limit'
 import {Routes} from "./routes";
 
-createConnection().then(async connection => {
+require('dotenv').config()
 
+createConnection().then(async connection => {
     // create express app
     const app = express();
-    app.use(cors());
+    app.use(cors({
+        origin: process.env.NODE_ENV === 'pruduction' ? "https://binaryfest.or.id" : "*"
+    }));
+    app.use(compression())
     app.use(helmet());
     app.use(bodyParser.json());
+    app.use(rateLimit({
+        windowMs: 1 * 60 * 1000,
+        max: 10
+    }))
 
     // register express routes from defined application routes
     const nextFunc = (req: Request, res: Response, next: Function) => {next()}

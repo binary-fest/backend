@@ -2,11 +2,14 @@
    "type": "postgres",
    "host": "ec2-54-86-189-179.compute-1.amazonaws.com",
    "port": 5432,
-   "username": "rgtxuuxjtqdivv",
-   "password": "_BinaryUTY_",
-   "database": "e6a94868a18e4bd9fef151b2ea54321fb72735e349dd31d0d9f1c563cbd0436f",
+   "username": "ogutwcoaumbxys",
+   "password": "87160fa33db8b1289fcdb154e4cd7809efcdd13abe6bd3a84ad3bcac2ff8163e",
+   "database": "d2lg438t91inbc",
    "synchronize": true,
    "logging": false,
+   "extra": {
+      "ssl": true
+   },
    "entities": [
       "src/entity/**/*.ts"
    ],
