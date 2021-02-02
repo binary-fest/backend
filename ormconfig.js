@@ -4,6 +4,9 @@ module.exports = {
    "url": process.env.DATABASE_URL,
    "synchronize": true,
    "logging": false,
+   "extras": {
+      "ssl": true
+   },
    "entities": [
       "build/entity/**/*.ts"
    ],
