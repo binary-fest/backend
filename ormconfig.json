@@ -5,6 +5,7 @@
    "username": "ogutwcoaumbxys",
    "password": "87160fa33db8b1289fcdb154e4cd7809efcdd13abe6bd3a84ad3bcac2ff8163e",
    "database": "d2lg438t91inbc",
+   "url": "postgres://ogutwcoaumbxys:87160fa33db8b1289fcdb154e4cd7809efcdd13abe6bd3a84ad3bcac2ff8163e@ec2-54-86-189-179.compute-1.amazonaws.com:5432/d2lg438t91inbc",
    "synchronize": true,
    "logging": false,
    "extra": {
