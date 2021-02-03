@@ -2,6 +2,11 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamMember } from "./TeamMember";
 import { TeamToken } from "./TeamToken";
 
+enum Competition{
+    iot = "IoT",
+    uiux = "UIUX"
+}
+
 @Entity()
 export class Team {
 
@@ -17,6 +22,9 @@ export class Team {
     @Column()
     instansi: string
 
+    @Column()
+    competition: Competition
+
     @Column({
         nullable: true
     })
@@ -24,6 +32,9 @@ export class Team {
 
     @Column()
     video_url: string
+
+    @Column('date', {default: () => "CURRENT_TIMESTAMP"})
+    createdAt: Date
 
     @OneToMany(type => TeamMember, teamMember => teamMember.team)
     teamMembers: TeamMember[]

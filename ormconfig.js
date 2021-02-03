@@ -8,13 +8,13 @@ module.exports = {
       "ssl": process.env.NODE_ENV === 'production' ? true : false
    },
    "entities": [
-      "build/entity/**/*.ts"
+      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/entity/**/*.ts`
    ],
    "migrations": [
-      "build/migration/**/*.ts"
+      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/migration/**/*.ts`
    ],
    "subscribers": [
-      "build/subscriber/**/*.ts"
+      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/subscriber/**/*.ts`
    ],
    "cli": {
       "entitiesDir": "src/entity",

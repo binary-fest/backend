@@ -1,6 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
 import { Team } from "./Team";
 
+enum Gender{
+    man = "man",
+    wowan = "woman"
+}
+
 @Entity()
 export class TeamMember {
 
@@ -11,7 +16,7 @@ export class TeamMember {
     name: string
 
     @Column()
-    gender: string
+    gender: Gender
 
     @Column()
     isLeader: boolean

@@ -2,12 +2,12 @@ import {getRepository} from "typeorm";
 import * as jwt from "jsonwebtoken";
 import {NextFunction, Request, Response} from "express";
 
-import { User } from "../entity/User";
+import { Auth } from "../entity/Auth";
 import config from '../config/config'
 
 export class AuthController {
 
-    private userRepository = getRepository(User);
+    private userRepository = getRepository(Auth);
 
     async login(req: Request, res: Response, next: NextFunction) {
         const { username, password } = req.body
@@ -15,7 +15,7 @@ export class AuthController {
             res.status(400).send()
         }
 
-        let user: User
+        let user: Auth
         try {
             user = await this.userRepository.findOneOrFail({
                 where: {
@@ -50,7 +50,7 @@ export class AuthController {
     async register(req: Request, res: Response, next: NextFunction){
         const { username, password, role} = req.body
 
-        let user = new User()
+        let user = new Auth()
         user.username = username
         user.password = password
         user.role = role

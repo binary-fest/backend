@@ -7,7 +7,7 @@ enum Role{
 }
 
 @Entity()
-export class User {
+export class Auth {
 
     @PrimaryColumn({
         length: 20,
