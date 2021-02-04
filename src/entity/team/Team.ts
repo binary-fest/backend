@@ -33,7 +33,7 @@ export class Team {
     @Column()
     video_url: string
 
-    @Column('date', {default: () => "CURRENT_TIMESTAMP"})
+    @Column({default: () => "CURRENT_TIMESTAMP"})
     createdAt: Date
 
     @OneToMany(type => TeamMember, teamMember => teamMember.team)

@@ -7,7 +7,6 @@ import { TeamMember } from "../entity/team/TeamMember";
 
 const cloudinaryV2 = cloudinary.v2
 
-cloudinaryV2.config(config.cloudinary)
 
 export class TeamController{
 
@@ -19,10 +18,12 @@ export class TeamController{
         
         const { team, members, proposal_url } = req.body
 
-        if(team === undefined || (members === undefined || members < 1) || proposal_url == undefined){
+        if(team === undefined || (members === undefined) || proposal_url == undefined){
             res.status(400).json({
                 message: "Request Not Valid"
             })
+
+            return;
         }
 
         // validation
@@ -37,16 +38,18 @@ export class TeamController{
             res.status(400).json({
                 message: "Leader must be 1"
             })
+            return;
         }
 
         const mTeam = new Team()
         mTeam.name = team.name
         mTeam.instansi = team.instansi
         mTeam.judul = team.judul
+        mTeam.competition = team.competition
         mTeam.proposal_url = "pre_upload"
-        mTeam.video_url = null
+        mTeam.video_url = ""
 
-        const teamMembers = new Array<TeamMember>(counter)
+        const teamMembers = new Array<TeamMember>(members.length)
 
         await this.teamRepository
             .save(mTeam)
@@ -56,8 +59,11 @@ export class TeamController{
                 })
                 .then(async(res_proposal) => {
                     mTeam.proposal_url = res_proposal.url
+
+                    this.teamRepository.save(mTeam)
         
-                    for(let i=0; i < counter; i++){
+                    for(let i=0; i < members.length; i++){
+                        teamMembers[i] = new TeamMember()
                         teamMembers[i].name = members[i].name
                         teamMembers[i].gender = members[i].gender
                         teamMembers[i].isLeader = members[i].isLeader

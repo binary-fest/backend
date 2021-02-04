@@ -6,11 +6,17 @@ import {Request, Response} from "express";
 import * as helmet from "helmet";
 import * as cors from "cors";
 import * as compression from "compression"
+import * as cloudinary from 'cloudinary'
 import * as rateLimit from 'express-rate-limit'
 import * as dotenv from 'dotenv'
 import {Routes} from "./routes";
+import config from "./config/config";
 
 dotenv.config()
+
+const cloudinaryV2 = cloudinary.v2
+
+cloudinaryV2.config(config.cloudinary)
 
 createConnection().then(async connection => {
     // create express app
@@ -21,10 +27,10 @@ createConnection().then(async connection => {
     app.use(compression())
     app.use(helmet());
     app.use(bodyParser.json());
-    app.use(rateLimit({
-        windowMs: 1 * 60 * 1000,
-        max: 10
-    }))
+    // app.use(rateLimit({
+    //     windowMs: 1 * 60 * 1000,
+    //     max: 10
+    // }))
 
     // register express routes from defined application routes
     const nextFunc = (req: Request, res: Response, next: Function) => {next()}
