@@ -1,23 +1,39 @@
-import {UserController} from "./controller/UserController";
+import { AuthController } from "./controller/AuthController";
+import { TeamController } from "./controller/TeamController";
+import { TestController } from "./controller/TestController";
+import { checkJwt } from "./middleware/checkJwt";
+import { checkRole } from './middleware/checkRole'
+import { noCheck } from "./middleware/noCheck";
 
-export const Routes = [{
-    method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all"
-}, {
-    method: "get",
-    route: "/users/:id",
-    controller: UserController,
-    action: "one"
+export const Routes = [
+// test routes
+{
+    method: "post",
+    route: "/api/test/cloudinary",
+    controller: TestController,
+    action: "testCloudinary",
+    middleware: noCheck
+},
+// auth routes
+{
+    method: "post",
+    route: "/api/auth/login",
+    controller: AuthController,
+    action: "login",
+    middleware: noCheck
 }, {
     method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save"
-}, {
-    method: "delete",
-    route: "/users/:id",
-    controller: UserController,
-    action: "remove"
-}];
+    route: "/api/auth/register",
+    controller: AuthController,
+    action: "register"
+},
+
+// team routes
+{
+    method: "post",
+    route: "/api/competition/iot/register",
+    controller: TeamController,
+    action: "registerIot"
+}
+
+];
