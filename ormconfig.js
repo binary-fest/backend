@@ -1,4 +1,7 @@
 console.log("process.env.DATABASE_URL :>> ", process.env.DATABASE_URL)
+
+const isProduction = process.env.NODE_ENV === 'production'
+
 module.exports = {
    "type": "postgres",
    "url": process.env.DATABASE_URL,
@@ -8,13 +11,13 @@ module.exports = {
       "ssl": process.env.NODE_ENV === 'production' ? true : false
    },
    "entities": [
-      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/entity/**/*.ts`
+      isProduction ? "build/entity/**/*.js" :  "src/entity/**/*.ts"
    ],
    "migrations": [
-      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/migration/**/*.ts`
+      isProduction ? "build/migration/**/*.js" :  "src/migration/**/*.ts"
    ],
    "subscribers": [
-      `${process.env.NODE_ENV === 'production' ? 'build' : 'src'}/subscriber/**/*.ts`
+      isProduction ? "build/subscriber/**/*.js" :  "src/subscriber/**/*.ts"
    ],
    "cli": {
       "entitiesDir": "src/entity",
