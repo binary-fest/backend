@@ -1,6 +1,5 @@
 import {NextFunction, Request, Response} from "express";
 import * as cloudinary from 'cloudinary'
-import config from "../config/config";
 import { getRepository } from "typeorm";
 import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
@@ -14,11 +13,11 @@ export class TeamController{
 
     private teamMemberRepository = getRepository(TeamMember)
 
-    async registerIot(req: Request, res: Response, next: NextFunction){
+    async registerIot(req: Request, res: Response){
         
-        const { team, members, proposal_url } = req.body
+        const { team, members, proposal_base64 } = req.body
 
-        if(team === undefined || (members === undefined) || proposal_url == undefined){
+        if(team === undefined || (members === undefined) || proposal_base64 == undefined){
             res.status(400).json({
                 message: "Request Not Valid"
             })
@@ -54,7 +53,7 @@ export class TeamController{
         await this.teamRepository
             .save(mTeam)
             .then(async(res_team) => {
-                await cloudinaryV2.uploader.upload(Buffer.from(proposal_url, 'base64').toString(), {
+                await cloudinaryV2.uploader.upload(Buffer.from(proposal_base64, 'base64').toString(), {
                     folder: `web/iot/team_${res_team.id_team}`
                 })
                 .then(async(res_proposal) => {
@@ -69,7 +68,7 @@ export class TeamController{
                         teamMembers[i].isLeader = members[i].isLeader
                         teamMembers[i].phone = members[i].phone
 
-                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].ktm_url, 'base64').toString(), {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].ktm_base64, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_ktm) => {
@@ -82,7 +81,7 @@ export class TeamController{
                             })
                         })
 
-                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].picture_url, 'base64').toString(), {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].picture_base64, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_pic) => {
@@ -95,7 +94,7 @@ export class TeamController{
                             })
                         })
 
-                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].screenshot_url, 'base64').toString(), {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].screenshot_base64, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_ss) => {
@@ -142,9 +141,8 @@ export class TeamController{
 
     }
 
-    async registerUiux(req: Request, res: Response, next: NextFunction){
+    async registerUiux(req: Request){
         
-        const {team, memmber} = req.body
 
     }
 
