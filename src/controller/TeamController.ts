@@ -54,7 +54,7 @@ export class TeamController{
         await this.teamRepository
             .save(mTeam)
             .then(async(res_team) => {
-                await cloudinaryV2.uploader.upload(proposal_url, {
+                await cloudinaryV2.uploader.upload(Buffer.from(proposal_url, 'base64').toString(), {
                     folder: `web/iot/team_${res_team.id_team}`
                 })
                 .then(async(res_proposal) => {
@@ -69,7 +69,7 @@ export class TeamController{
                         teamMembers[i].isLeader = members[i].isLeader
                         teamMembers[i].phone = members[i].phone
 
-                        await cloudinaryV2.uploader.upload(members[i].ktm_url, {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].ktm_url, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_ktm) => {
@@ -82,7 +82,7 @@ export class TeamController{
                             })
                         })
 
-                        await cloudinaryV2.uploader.upload(members[i].picture_url, {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].picture_url, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_pic) => {
@@ -95,7 +95,7 @@ export class TeamController{
                             })
                         })
 
-                        await cloudinaryV2.uploader.upload(members[i].screenshot_url, {
+                        await cloudinaryV2.uploader.upload(Buffer.from(members[i].screenshot_url, 'base64').toString(), {
                             folder: `web/iot/team_${res_team.id_team}`
                         })
                         .then((res_ss) => {

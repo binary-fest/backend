@@ -26,11 +26,11 @@ createConnection().then(async connection => {
     }));
     app.use(compression())
     app.use(helmet());
-    app.use(bodyParser.json());
-    // app.use(rateLimit({
-    //     windowMs: 1 * 60 * 1000,
-    //     max: 10
-    // }))
+    app.use(bodyParser.json({limit: "5mb"}));
+    app.use(rateLimit({
+        windowMs: 1 * 60 * 1000,
+        max: 10
+    }))
 
     // register express routes from defined application routes
     const nextFunc = (req: Request, res: Response, next: Function) => {next()}
