@@ -15,23 +15,17 @@ export class TeamMember {
     @Column()
     name: string
 
+    @Column({length: 20})
+    student_id: string
+
     @Column()
     gender: Gender
 
     @Column()
     isLeader: boolean
 
-    @Column()
+    @Column({length: 20})
     phone: string
-
-    @Column("text")
-    ktm_url: string
-
-    @Column("text")
-    picture_url: string
-
-    @Column("text")
-    screenshot_url: string
 
     @ManyToOne(type => Team, team => team.teamMembers)
     team: Team

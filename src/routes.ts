@@ -31,9 +31,9 @@ export const Routes = [
 // team routes
 {
     method: "post",
-    route: "/api/competition/iot/register",
+    route: "/api/competition/register",
     controller: TeamController,
-    action: "registerIot"
+    action: "register"
 }
 
 ];
