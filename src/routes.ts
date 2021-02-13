@@ -18,8 +18,8 @@ export const Routes = [
 
 // home routes
 {
-    method: "post",
-    route: "/api/auth/login",
+    method: "get",
+    route: "/",
     controller: HomeController,
     action: "login",
     middleware: noCheck
