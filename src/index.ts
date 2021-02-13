@@ -22,7 +22,7 @@ createConnection().then(async connection => {
     // create express app
     const app = express();
     app.use(cors({
-        origin: process.env.NODE_ENV === 'pruduction' ? "https://binaryfest.or.id" : "*"
+        origin: process.env.NODE_ENV === 'pruduction' ? "*" : "*"
     }));
     app.use(compression())
     app.use(helmet());

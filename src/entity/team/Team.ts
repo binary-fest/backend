@@ -3,8 +3,8 @@ import { TeamMember } from "./TeamMember";
 import { TeamToken } from "./TeamToken";
 
 enum Competition{
-    iot = "IoT",
-    uiux = "UIUX"
+    iot = "iot",
+    uiux = "uiux"
 }
 
 @Entity()
@@ -16,22 +16,20 @@ export class Team {
     @Column()
     name: String
 
-    @Column()
-    judul: string
+    @Column({length: 100})
+    email: string
+
+    @Column({length: 100})
+    institute: string
 
     @Column()
-    instansi: string
+    title: string
+
+    @Column({length: 5})
+    competition_type: Competition
 
     @Column()
-    competition: Competition
-
-    @Column({
-        nullable: true
-    })
-    proposal_url: string
-
-    @Column()
-    video_url: string
+    url_files: string
 
     @Column({default: () => "CURRENT_TIMESTAMP"})
     createdAt: Date

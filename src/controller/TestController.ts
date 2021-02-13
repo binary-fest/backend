@@ -7,7 +7,7 @@ export class TestController{
     async testCloudinary(req: Request, res: Response, next: NextFunction){
         const { url } = req.body
 
-        await cloudinaryV2.uploader.upload(Buffer.from(url, 'base64').toString(), {
+        await cloudinaryV2.uploader.upload(url, {
             folder: "web/test"
         })
         .then((result) => {
