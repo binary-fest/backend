@@ -21,7 +21,7 @@ export const Routes = [
     method: "get",
     route: "/",
     controller: HomeController,
-    action: "login",
+    action: "index",
     middleware: noCheck
 },
 
