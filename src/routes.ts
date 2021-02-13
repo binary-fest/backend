@@ -1,4 +1,5 @@
 import { AuthController } from "./controller/AuthController";
+import { HomeController } from "./controller/HomeController";
 import { TeamController } from "./controller/TeamController";
 import { TestController } from "./controller/TestController";
 import { checkJwt } from "./middleware/checkJwt";
@@ -14,6 +15,16 @@ export const Routes = [
     action: "testCloudinary",
     middleware: noCheck
 },
+
+// home routes
+{
+    method: "post",
+    route: "/api/auth/login",
+    controller: HomeController,
+    action: "login",
+    middleware: noCheck
+},
+
 // auth routes
 {
     method: "post",
