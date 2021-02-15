@@ -59,31 +59,28 @@ baseurl: https://api-binaryfest.herokuapp.com
 	{
 		"team": {
 			"name": "binary",
-			"judul": "binary IoT",
-			"instansi": "UTY",
-			"competition": "IoT"
+			"title": "binary IoT",
+			"institute": "UTY",
+			"email": "binary@gmail.com",
+			"competition_type": "IoT",
+			"url_files": "https://binaryfest.or.id/files"
 		},
 		"members": [
 			{
 				"name": "anggota binary 1",
+				"student_id": "519031188"
 				"gender": "man",
 				"isLeader": true,
-				"phone": "12345678",
-				"ktm_base64": "Base64 => encode",
-				"picture_base64": "Base64 => encode",
-				"screenshot_base64": "Base64 => encode"
+				"phone": "12345678"
 			},
 			{
 				"name": "anggota binary 2",
+				"student_id": "519041055"
 				"gender": "woman",
 				"isLeader": false,
-				"phone": "87654321",
-				"ktm_base64": "Base64 => encode",
-				"picture_base64": "Base64 => encode",
-				"screenshot_base64": "Base64 => encode"
+				"phone": "87654321"
 			}
-		],
-		"proposal_base64" : "Base64 => encode"
+		]
 	}
 	```
 - res :
