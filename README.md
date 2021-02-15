@@ -68,14 +68,14 @@ baseurl: https://api-binaryfest.herokuapp.com
 		"members": [
 			{
 				"name": "anggota binary 1",
-				"student_id": "519031188"
+				"student_id": "519031188",
 				"gender": "man",
 				"isLeader": true,
 				"phone": "12345678"
 			},
 			{
 				"name": "anggota binary 2",
-				"student_id": "519041055"
+				"student_id": "519041055",
 				"gender": "woman",
 				"isLeader": false,
 				"phone": "87654321"
