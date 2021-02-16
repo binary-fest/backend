@@ -1,5 +1,6 @@
 ##  API Documentation
-baseurl: https://api-binaryfest.herokuapp.com
+- baseurl: https://api-binaryfest.herokuapp.com
+- development url: https://binaryfest-1111.herokuapp.com
 ###  Auth Api
 #### - Register
 - url : /api/auth/register
