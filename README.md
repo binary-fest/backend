@@ -97,6 +97,10 @@ baseurl: https://api-binaryfest.herokuapp.com
 			```json
 			message: "Leader must be 1"
 			```
+		- Email must be unique each team
+			```json
+			message: "Email has been registered by another team"
+			```
 		- another error
 			```json
 			message: "error message",
