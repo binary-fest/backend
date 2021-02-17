@@ -1,5 +1,7 @@
 import {NextFunction, Request, Response} from "express";
 import * as cloudinary from 'cloudinary'
+import { ErrorCallback } from "typescript";
+
 const cloudinaryV2 = cloudinary.v2
 
 export class TestController{
