@@ -44,7 +44,6 @@ export const Routes = [
         method: "post",
         route: "/api/test/send-email",
         controller: SendEmailController,
-        action: "send",
-        middleware: checkJwt
+        action: "send"
     }
 ];
