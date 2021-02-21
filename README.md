@@ -107,3 +107,59 @@
 			message: "error message",
 			error:
 			```
+### Service API
+#### - Send Email
+- url: /api/service/send-email
+- req:
+	```json
+	{
+		"mailType": "registration",
+		"subject": "Pendaftaran BinaryFest2021",
+		"receiver": [
+			{
+				"data": {
+					"name": "Tim Gundala"
+				},
+				"address": "timgundala@gmail.com"
+			},
+			{
+				"data": {
+					"name": "Tim Superman"
+				},
+				"address": "timsuperman@gmail.com"
+			},
+			{
+				"data": {
+					"name": "Tim Thor"
+				},
+				"address": "timthor@gmail.com"
+			},
+			{
+				"data": {
+					"name": "Tim Batman"
+				},
+				"address": "timbatman@gmail.com"
+			}
+		]
+	}
+	```
+- res:
+	- success
+		```json
+		message: "Email was sent",
+		success: [
+			"timbatman@gmail.com", 
+			"timthor@gamil.com",
+			"timsuperman@gmail.com"
+		],
+		failed: ["timgundala@gmail.com"]
+		```
+	- error
+		- Max email recipients
+		```json
+		message: "Max email recipients are 20"
+		```
+		- No email was sent
+		```json
+		message: "No email was sent"
+		```
