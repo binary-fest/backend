@@ -41,7 +41,7 @@ export const Routes = [
     // send email routes
     {
         method: "post",
-        route: "/api/test/send-email",
+        route: "/api/service/send-email",
         controller: SendEmailController,
         action: "send"
     }
