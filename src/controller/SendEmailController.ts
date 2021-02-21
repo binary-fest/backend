@@ -1,35 +1,50 @@
+import { fail } from "assert";
 import { NextFunction, Request, Response } from "express";
 import { MailService } from "../services/MailServices";
 
-
-// Request for send mail
-/**
- * {
- *  template: "register",
- *  receiver: ["bagusfarizky89@gmail.com", "example1@gmail.com", "example2@gmail.com"]
- * }
- */
-
 export class SendEmailController {
   async send(req:Request, res:Response) {
+    const {mailType, subject, receiver } = req.body
 
     const mailData = {
-      subject: "Pendaftaran BinaryFest2021",
-      data: {
-        textHeader: 'Selamat Datang bagus Trianurdin',
-        textBody: 'Ini adalah body dari email',
-        textFooter: "Ini adalah footer dari email"
-      }
+      mailType,
+      subject,
+      receiver
     }
 
-    MailService(mailData, 'registration', ['bagusfarizky89@gmail.com', 'btstargroup@gmail.com'])
-      .then(result => {
-        res.status(200).json({
-          message: 'Send email success'
-        })
+    if (receiver.length > 20) {
+      res.status(400).json({
+        message: 'Max email recipients are 20'
       })
-      .catch(err => {
-        console.log(err);
+      return;
+    }
+
+    MailService(mailData)
+      .then(result => {
+        const failedSend = [];
+        const successSend = [];
+
+        result.forEach(mail => {
+          if (mail.status === 'rejected') {
+            failedSend.push(mail.reason)
+          } 
+          if (mail.status === 'fulfilled'){
+            successSend.push(mail.value)
+          }
+        })
+
+        if (successSend.length === 0) {
+          res.status(400).json({
+            message: 'No email was sent'
+          })
+          return;
+        }
+        
+        res.status(200).json({
+          message: 'Email was sent',
+          success: successSend,
+          failed: failedSend
+        })
       })
       
   }

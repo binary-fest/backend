@@ -2,15 +2,19 @@ import * as nodemailer from 'nodemailer';
 import * as mustance from 'mustache';
 import { readFileSync } from 'fs';
 import { join } from 'path';
+import * as allSettled  from 'promise.allsettled';
 
 interface mailData{
+  mailType: string;
   subject: string;
-  data: any;
+  receiver: any;
 }
 
-export const MailService = async (mailData: mailData, template: string, receiver: Array<string>) => {
+export const MailService = async (mailData: mailData) => {
 
-  const mailTemplate = readFileSync(join(__dirname,`/templates/mail-${template}.mustache`), 'utf8')  
+  const {mailType,subject,receiver} = mailData;
+
+  const mailTemplate = readFileSync(join(__dirname,'..',`/templates/mail-${mailType}.mustache`), 'utf8')  
 
   let transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
@@ -22,29 +26,25 @@ export const MailService = async (mailData: mailData, template: string, receiver
     },
   });
 
-  return new Promise((resolve: any, reject: any) => {
-    
-    try {
-      const mailMap = receiver.map(async rec => {
-        return await transporter.sendMail({
-          from: '"BinaryFest" <noreply@binaryfest.or.id>', // sender address
-          to: rec, // list of receivers
-          subject: mailData.subject, // Subject line
-          html: mustance.render(mailTemplate, mailData.data), // html body
-        })
-      });
+  const mailPromise = [];
 
-      resolve('Success send email');
-    } catch (error) {
-      reject('Failed send email')
-    }
-
+  receiver.forEach((_data: any) => {
+    mailPromise.push(new Promise((resolve, reject) => {
+      transporter.sendMail({
+        from: '"BinaryFest" <noreply@binaryfest.or.id>', // sender address
+        to: _data.address, // list of receivers
+        subject: subject, // Subject line
+        html: mustance.render(mailTemplate, _data.data), // html body
+      }, (err, info) => {
+        if(err){
+          reject(_data.address)
+        } else {
+          resolve(_data.address)
+        }
+      })
+    }))
   })
+  
+  return allSettled(mailPromise)
 
-  // return await transporter.sendMail({
-  //     from: '"BinaryFest" <noreply@binaryfest.or.id>', // sender address
-  //     to: receiver.join(", "), // list of receivers
-  //     subject: mailData.subject, // Subject line
-  //     html: mustance.render(mailTemplate, mailData.data), // html body
-  //   })
 }
