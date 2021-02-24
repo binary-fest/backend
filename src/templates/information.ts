@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+import { mailTemplateObj } from '../model/RegistrationEmail';
+
+export default function information(mail: mailTemplateObj) {
+  return `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -34,7 +37,8 @@
   <div class="container">
     <div class="content">
       <div class="mail-header">
-        <p>Hai, {{ name }}</p>
+        <h2>INFORMATION EMAIL</h2>
+        <p>Hai, ${mail.name}</p>
       </div>
       <div class="mail-body">
         <p>Ini adalah body</p>
@@ -45,4 +49,5 @@
     </div>
   </div>
 </body>
-</html>
+</html>`
+}

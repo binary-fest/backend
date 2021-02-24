@@ -1,8 +1,6 @@
 import * as nodemailer from 'nodemailer';
-import * as mustance from 'mustache';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import * as allSettled  from 'promise.allsettled';
+import * as template from '../templates';
 
 interface mailData{
   mailType: string;
@@ -13,8 +11,6 @@ interface mailData{
 export const MailService = async (mailData: mailData) => {
 
   const {mailType,subject,receiver} = mailData;
-
-  const mailTemplate = readFileSync(join(__dirname,'..',`/templates/mail-${mailType}.mustache`), 'utf8')  
 
   let transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
@@ -34,7 +30,7 @@ export const MailService = async (mailData: mailData) => {
         from: '"BinaryFest" <noreply@binaryfest.or.id>', // sender address
         to: _data.address, // list of receivers
         subject: subject, // Subject line
-        html: mustance.render(mailTemplate, _data.data), // html body
+        html: template[mailType](_data.data), // html body
       }, (err, info) => {
         if(err){
           reject(_data.address)
