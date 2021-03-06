@@ -7,6 +7,12 @@ enum Competition{
     uiux = "uiux"
 }
 
+enum TeamStatus{
+    pending = "pending",
+    approved = "approved",
+    rejected = "rejected" 
+}
+
 @Entity()
 export class Team {
 
@@ -14,7 +20,7 @@ export class Team {
     id_team: number
 
     @Column()
-    name: String
+    name: string
 
     @Column({length: 100})
     email: string
@@ -27,6 +33,9 @@ export class Team {
 
     @Column({length: 5})
     competition_type: Competition
+
+    @Column()
+    status: TeamStatus
 
     @Column()
     url_files: string

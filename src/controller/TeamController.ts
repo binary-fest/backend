@@ -1,6 +1,5 @@
-import {NextFunction, Request, Response} from "express";
+import {Request, Response} from "express";
 import { getRepository } from "typeorm";
-import { resolveModuleName } from "typescript";
 import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
@@ -8,7 +7,6 @@ import { ReqTeamRegister } from "../model/ReqTeamRegister";
 export class TeamController{
 
   private teamRepository = getRepository(Team)
-
   private teamMemberRepository = getRepository(TeamMember)
 
   async register(req: Request, res: Response){
@@ -20,7 +18,6 @@ export class TeamController{
       res.status(400).json({
         message: "Request Not Valid"
       })
-
       return;
     }
 
