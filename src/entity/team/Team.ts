@@ -1,16 +1,11 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamMember } from "./TeamMember";
 import { TeamToken } from "./TeamToken";
+import { TeamStatus } from "../../model/TeamStatusEnum";
 
 enum Competition{
     iot = "iot",
     uiux = "uiux"
-}
-
-enum TeamStatus{
-    pending = "pending",
-    approved = "approved",
-    rejected = "rejected" 
 }
 
 @Entity()

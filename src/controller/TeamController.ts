@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
+import { TeamStatus } from "../model/TeamStatusEnum";
 
 export class TeamController{
 
@@ -44,6 +45,9 @@ export class TeamController{
       })
       return;
     }
+
+    // Add status to team database
+    team.status = TeamStatus.pending;
     
     await this.teamRepository
       .save(team)
