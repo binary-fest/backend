@@ -55,6 +55,15 @@ export class AuthController {
     user.password = password
     user.role = role
 
+    const extractRole = Object.keys(Role)
+
+    if (!extractRole.includes(role)) {
+      res.status(400).json({
+        message: "invalid role"
+      })
+      return;
+    }
+
     user.hashPassword()
     
     await this.userRepository.findOneOrFail({
