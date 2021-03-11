@@ -1,8 +1,7 @@
 import {getRepository} from "typeorm";
 import * as jwt from "jsonwebtoken";
 import {NextFunction, Request, Response} from "express";
-
-import { Auth } from "../entity/Auth";
+import { Auth, Role } from "../entity/Auth";
 import config from '../config/config'
 
 export class AuthController {
