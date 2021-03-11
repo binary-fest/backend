@@ -80,4 +80,16 @@ export class TeamController{
       })
   }
 
+  async status(req: Request, res: Response){
+    const { email, status } = req.body;
+    const getTeamFromEmail: Team = await this.teamRepository.findOne({email: email});
+
+    getTeamFromEmail.status = status as TeamStatus;
+
+    res.status(200).json({
+      message: getTeamFromEmail
+    })
+    return;
+  }
+
 }

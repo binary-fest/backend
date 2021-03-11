@@ -37,12 +37,17 @@ export const Routes = [
         controller: TeamController,
         action: "register"
     },
-
-    // send email routes
     {
-        method: "post",
-        route: "/api/service/send-email",
-        controller: SendEmailController,
-        action: "send"
-    }
+        method: "put",
+        route: "/api/team/status",
+        controller: TeamController,
+        action: "status"
+    },
+    // // send email routes
+    // {
+    //     method: "post",
+    //     route: "/api/service/send-email",
+    //     controller: SendEmailController,
+    //     action: "send"
+    // }
 ];

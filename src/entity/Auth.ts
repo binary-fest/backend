@@ -1,7 +1,7 @@
 import {Entity, Column, PrimaryColumn} from "typeorm";
 import * as bcrypt from 'bcryptjs'
 
-enum Role{
+export enum Role{
     admin = "ADMIN",
     user = "USER"
 }
