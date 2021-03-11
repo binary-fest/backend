@@ -41,7 +41,8 @@ export const Routes = [
         method: "put",
         route: "/api/team/status",
         controller: TeamController,
-        action: "status"
+        action: "status",
+        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
     },
     // // send email routes
     // {
