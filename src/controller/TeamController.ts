@@ -5,6 +5,7 @@ import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
 import { MailService } from "../services/MailServices";
+import { SingleMailService } from "../services/SingleMailService";
 
 export class TeamController{
 
@@ -98,48 +99,42 @@ export class TeamController{
     getTeamFromEmail.status = status as TeamStatus;
 
     const mailData = {
-      mailType: `reg_${status}`,
+      mailtype: `reg_${status}`,
       subject: 'Registration Information',
-      receiver: [
-        {
-          data: {
-            name: getTeamFromEmail.name
-          },
-          address: getTeamFromEmail.email
-        }
-      ]
+      receiver: getTeamFromEmail.email,
+      maildata: {
+        name: getTeamFromEmail.name
+      }
     }
 
-    MailService(mailData)
-      .then(async result => {
-        if (result[0].status === "fulfilled") {
-          res.status(200).json({
-            message: "success set status for team"
+    SingleMailService(mailData.mailtype, mailData.subject, mailData.receiver, mailData.maildata)
+      .then(async () => {  
+        // save changes to database
+        await this.teamRepository.save(getTeamFromEmail)
+          .then(() => {
+            res.status(200).json({
+              message: "team status was updated",
+              email_msg: "Email sent to team email",
+              team_data: {
+                name: getTeamFromEmail.name,
+                email: getTeamFromEmail.email,
+                status: getTeamFromEmail.status
+              }
+            })
           })
-          return;
-        }
-        res.status(400).json({
-          message: "Set status failed!"
-        })
-        // await this.teamRepository.save(getTeamFromEmail)
-        //   .then(() => {
-        //     res.status(200).json({
-        //       message: "team status was updated",
-        //       updated_data: {
-        //         name: getTeamFromEmail.name,
-        //         email: getTeamFromEmail.email,
-        //         status: getTeamFromEmail.status
-        //       }
-        //     })
-        //   })
-        //   .catch(() => {
-        //     res.status(500).json({
-        //       message: "has an error"
-        //     })
-        //   })
-
+          .catch(() => {
+            res.status(500).json({
+              message: "has an error when saving data"
+            })
+          })
       })
-
+      .catch((err) => {
+        res.status(400).json({
+          message: 'Set status failed because email not sent',
+          err
+        })
+      })
+      
   }
 
 }
