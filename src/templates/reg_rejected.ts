@@ -1,6 +1,6 @@
 import { mailTemplateObj } from '../model/RegistrationEmail';
 
-export default function information(mail: mailTemplateObj) {
+export default function reg_rejected(mail: mailTemplateObj) {
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,8 +37,8 @@ export default function information(mail: mailTemplateObj) {
   <div class="container">
     <div class="content">
       <div class="mail-header">
-        <h2>INFORMATION EMAIL</h2>
-        <p>Hai, ${mail.name}</p>
+        <h2>REGISTRATION INFORMATION</h2>
+        <p>Hai, ${mail.name}. Your team got rejected.</p>
       </div>
       <div class="mail-body">
         <p>Ini adalah body</p>

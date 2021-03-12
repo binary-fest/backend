@@ -4,6 +4,8 @@ import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
+import { MailService } from "../services/MailServices";
+import { SingleMailService } from "../services/SingleMailService";
 
 export class TeamController{
 
@@ -82,14 +84,57 @@ export class TeamController{
 
   async status(req: Request, res: Response){
     const { email, status } = req.body;
-    const getTeamFromEmail: Team = await this.teamRepository.findOne({email: email});
+
+    let getTeamFromEmail: Team
+
+    try{
+      getTeamFromEmail= await this.teamRepository.findOneOrFail({email: email});
+    }catch(err){
+      res.status(400).json({
+        message: "email is not registered"
+      })
+      return;
+    }
 
     getTeamFromEmail.status = status as TeamStatus;
 
-    res.status(200).json({
-      message: getTeamFromEmail
-    })
-    return;
+    const mailData = {
+      mailtype: `reg_${status}`,
+      subject: 'Registration Information',
+      receiver: getTeamFromEmail.email,
+      maildata: {
+        name: getTeamFromEmail.name
+      }
+    }
+
+    SingleMailService(mailData.mailtype, mailData.subject, mailData.receiver, mailData.maildata)
+      .then(async () => {  
+        // save changes to database
+        await this.teamRepository.save(getTeamFromEmail)
+          .then(() => {
+            res.status(200).json({
+              message: "team status was updated",
+              email_msg: "Email sent to team email",
+              team_data: {
+                name: getTeamFromEmail.name,
+                email: getTeamFromEmail.email,
+                status: getTeamFromEmail.status
+              }
+            })
+          })
+          .catch(() => {
+            res.status(500).json({
+              message: "has an error when saving data"
+            })
+          })
+      })
+      .catch((err) => {
+        res.status(400).json({
+          message: 'Set status failed because email not sent',
+          err
+        })
+      })
+      
   }
 
 }
