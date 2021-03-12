@@ -38,12 +38,12 @@ export default function reg_approved(mail: mailTemplateObj) {
     <div class="content">
       <div class="mail-header">
         <h2>INFORMATION EMAIL</h2>
-        <p>Hai, ${mail.name}. Your team got rejected.</p>
+        <p>Hai, ${mail.name}. Congratulatios, your team aprroved.</p>
       </div>
       <div class="mail-body">
         <p>Ini adalah body</p>
       </div>
-      <div class="mail-footer">
+      <div class="mail-footer"> 
         <p>Ini adalah footer</p>
       </div>
     </div>

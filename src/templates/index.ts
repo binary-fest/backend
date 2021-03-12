@@ -1,7 +1,9 @@
 import registration from './registration'
-import information from './reg_approved'
+import reg_approved from './reg_approved'
+import reg_rejected from './reg_rejected'
 
 export {
   registration,
-  information
+  reg_approved,
+  reg_rejected
 }

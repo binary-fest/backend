@@ -4,6 +4,7 @@ import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
+import { MailService } from "../services/MailServices";
 
 export class TeamController{
 
@@ -96,23 +97,49 @@ export class TeamController{
 
     getTeamFromEmail.status = status as TeamStatus;
 
-    await this.teamRepository.save(getTeamFromEmail)
-      .then(() => {
-        res.status(200).json({
-          message: "team status was updated",
-          updated_data: {
-            name: getTeamFromEmail.name,
-            email: getTeamFromEmail.email,
-            status: getTeamFromEmail.status
-          }
+    const mailData = {
+      mailType: `reg_${status}`,
+      subject: 'Registration Information',
+      receiver: [
+        {
+          data: {
+            name: getTeamFromEmail.name
+          },
+          address: getTeamFromEmail.email
+        }
+      ]
+    }
+
+    MailService(mailData)
+      .then(async result => {
+        if (result[0].status === "fulfilled") {
+          res.status(200).json({
+            message: "success set status for team"
+          })
+          return;
+        }
+        res.status(400).json({
+          message: "Set status failed!"
         })
+        // await this.teamRepository.save(getTeamFromEmail)
+        //   .then(() => {
+        //     res.status(200).json({
+        //       message: "team status was updated",
+        //       updated_data: {
+        //         name: getTeamFromEmail.name,
+        //         email: getTeamFromEmail.email,
+        //         status: getTeamFromEmail.status
+        //       }
+        //     })
+        //   })
+        //   .catch(() => {
+        //     res.status(500).json({
+        //       message: "has an error"
+        //     })
+        //   })
+
       })
-      .catch(() => {
-        res.status(500).json({
-          message: "has an error"
-        })
-      })
-    return;
+
   }
 
 }
