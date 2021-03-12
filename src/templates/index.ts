@@ -1,5 +1,5 @@
 import registration from './registration'
-import information from './information'
+import information from './reg_approved'
 
 export {
   registration,

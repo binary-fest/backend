@@ -5,7 +5,7 @@ import * as template from '../templates';
 interface mailData{
   mailType: string;
   subject: string;
-  receiver: any;
+  receiver: Array<Object>;
 }
 
 export const MailService = async (mailData: mailData) => {
