@@ -82,13 +82,36 @@ export class TeamController{
 
   async status(req: Request, res: Response){
     const { email, status } = req.body;
-    const getTeamFromEmail: Team = await this.teamRepository.findOne({email: email});
+
+    let getTeamFromEmail: Team
+
+    try{
+      getTeamFromEmail= await this.teamRepository.findOneOrFail({email: email});
+    }catch(err){
+      res.status(400).json({
+        message: "email is not registered"
+      })
+      return;
+    }
 
     getTeamFromEmail.status = status as TeamStatus;
 
-    res.status(200).json({
-      message: getTeamFromEmail
-    })
+    await this.teamRepository.save(getTeamFromEmail)
+      .then(() => {
+        res.status(200).json({
+          message: "team status was updated",
+          updated_data: {
+            name: getTeamFromEmail.name,
+            email: getTeamFromEmail.email,
+            status: getTeamFromEmail.status
+          }
+        })
+      })
+      .catch(() => {
+        res.status(500).json({
+          message: "has an error"
+        })
+      })
     return;
   }
 
