@@ -3,7 +3,7 @@ import { TeamMember } from "./TeamMember";
 import { TeamToken } from "./TeamToken";
 import { TeamStatus } from "../../model/TeamStatusEnum";
 
-enum Competition{
+export enum Competition{
     iot = "iot",
     uiux = "uiux"
 }

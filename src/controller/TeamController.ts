@@ -85,37 +85,28 @@ export class TeamController{
   }
 
   async all(req: Request, res: Response){
-    const { username } = res.locals.jwtPayload
-
-    let getAuthData: Auth;
-
-    try {
-      getAuthData = await this.authRepository.findOneOrFail({
-        select: ["username","role"], 
-        where: {username: username}
+    await this.teamRepository.find({competition_type: res.locals.userRole as any})
+      .then(result => {
+        res.status(200).json({
+          message: result
+        })
       })
-
-    } catch (error) {
-      res.status(400).json({
-        message: "User not vailable",
-        error
+      .catch(error => {
+        res.status(400).json({
+          message: error
+        })
       })
-      return;
-    }
-
-    // await this.teamRepository.findOneOrFail({competition_type: })
-    //   .then(result => {
-
-    //   })
   }
 
   async status(req: Request, res: Response){
-    const { email, status } = req.body;
+    const { email, status } = req.body
+    // perubahan status harus menjadi approved atau rejected
+    const defineAllowStatus = ["approved", "rejected"]
 
     let getTeamFromEmail: Team
 
     try{
-      getTeamFromEmail= await this.teamRepository.findOneOrFail({email: email});
+      getTeamFromEmail= await this.teamRepository.findOneOrFail({email: email})
     }catch(err){
       res.status(400).json({
         message: "email is not registered"
@@ -123,7 +114,23 @@ export class TeamController{
       return;
     }
 
-    getTeamFromEmail.status = status as TeamStatus;
+    // Status must be change to approved or rejected
+    if (!defineAllowStatus.includes(status)) {
+      res.status(400).json({
+        message: "Status method not available"
+      })
+      return;
+    }
+
+    // every admin must change the status of their members 
+    if (res.locals.userRole !== getTeamFromEmail.competition_type) {
+      res.status(400).json({
+        message: "role does not match to change this team status"
+      })
+      return;
+    }
+
+    getTeamFromEmail.status = status as TeamStatus
 
     const mailData = {
       mailtype: `reg_${status}`,
