@@ -43,7 +43,11 @@ export class AuthController {
     )
 
     res.status(200).json({
-      token
+      token,
+      details: {
+        username: user.username,
+        role: user.role
+      }
     })
   }
 

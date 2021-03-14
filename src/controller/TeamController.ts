@@ -4,13 +4,14 @@ import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
-import { MailService } from "../services/MailServices";
+import { Auth } from "../entity/Auth";
 import { SingleMailService } from "../services/SingleMailService";
 
 export class TeamController{
 
   private teamRepository = getRepository(Team)
   private teamMemberRepository = getRepository(TeamMember)
+  private authRepository = getRepository(Auth)
 
   async register(req: Request, res: Response){
       
@@ -50,6 +51,7 @@ export class TeamController{
 
     // Add status to team database
     team.status = TeamStatus.pending;
+    team.competition_type = team.competition_type.toLocaleLowerCase() as any;
     
     await this.teamRepository
       .save(team)
@@ -80,6 +82,31 @@ export class TeamController{
             error
         })
       })
+  }
+
+  async all(req: Request, res: Response){
+    const { username } = res.locals.jwtPayload
+
+    let getAuthData: Auth;
+
+    try {
+      getAuthData = await this.authRepository.findOneOrFail({
+        select: ["username","role"], 
+        where: {username: username}
+      })
+
+    } catch (error) {
+      res.status(400).json({
+        message: "User not vailable",
+        error
+      })
+      return;
+    }
+
+    // await this.teamRepository.findOneOrFail({competition_type: })
+    //   .then(result => {
+
+    //   })
   }
 
   async status(req: Request, res: Response){
