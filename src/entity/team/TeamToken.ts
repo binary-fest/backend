@@ -1,5 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Team } from "./Team";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class TeamToken{
@@ -18,8 +17,5 @@ export class TeamToken{
 
     @Column('date')
     expiredAt: Date
-
-    @ManyToOne(type => Team, team => team.teamTokens)
-    team: Team
 
 }
