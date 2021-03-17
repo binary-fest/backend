@@ -1,4 +1,5 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Team } from "./Team";
 
 export enum SubmissionStatus{
   pending = "pending",
@@ -29,5 +30,8 @@ export class TeamSubmission {
 
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   updatedAt: Date
+
+  @ManyToOne(type => Team, team => team.teamSubmission)
+  team: Team
 
 }

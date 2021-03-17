@@ -2,6 +2,7 @@ import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamMember } from "./TeamMember";
 import { TeamToken } from "./TeamToken";
 import { TeamStatus } from "../../model/TeamStatusEnum";
+import { TeamSubmission } from "./TeamSubmission";
 
 export enum Competition{
     iot = "iot",
@@ -41,7 +42,7 @@ export class Team {
     @OneToMany(type => TeamMember, teamMember => teamMember.team)
     teamMembers: TeamMember[]
 
-    @OneToMany(type => TeamToken, teamToken => teamToken.team)
-    teamTokens: TeamToken[]
+    @OneToMany(type => TeamSubmission, teamSubmission => teamSubmission.team)
+    teamSubmission: TeamSubmission[]
 
 }
