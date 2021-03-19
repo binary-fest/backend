@@ -1,5 +1,6 @@
 import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Team } from "./Team";
+import { TeamToken } from "./TeamToken";
 
 export enum SubmissionStatus{
   pending = "pending",
@@ -33,5 +34,8 @@ export class TeamSubmission {
 
   @ManyToOne(type => Team, team => team.teamSubmission)
   team: Team
+
+  @OneToMany(type => TeamToken, teamToken => teamToken.teamSubmission)
+  teamToken: TeamToken[]
 
 }

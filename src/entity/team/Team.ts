@@ -1,7 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { TeamMember } from "./TeamMember";
-import { TeamToken } from "./TeamToken";
-import { TeamStatus } from "../../model/TeamStatusEnum";
 import { TeamSubmission } from "./TeamSubmission";
 
 export enum Competition{
@@ -29,12 +27,6 @@ export class Team {
 
     @Column({length: 5})
     competition_type: Competition
-
-    @Column()
-    status: TeamStatus
-
-    @Column()
-    url_files: string
 
     @Column({default: () => "CURRENT_TIMESTAMP"})
     createdAt: Date
