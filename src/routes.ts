@@ -50,12 +50,5 @@ export const Routes = [
         controller: TeamController,
         action: "all",
         middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    },
-    // // send email routes
-    // {
-    //     method: "post",
-    //     route: "/api/service/send-email",
-    //     controller: SendEmailController,
-    //     action: "send"
-    // }
+    }
 ];
