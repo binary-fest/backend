@@ -13,12 +13,12 @@ export class TeamSubmission {
   @PrimaryGeneratedColumn()
   id_team_submission: number
 
-  @Column()
+  @Column("smallint")
   submission_type: number
 
   @Column()
   submission_name: string
-
+ 
   @Column()
   url_files: string
 
