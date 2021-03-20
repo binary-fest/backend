@@ -4,6 +4,7 @@
 ###  Auth Api
 #### - Register
 - url : /api/auth/register
+- method : POST
 - req :
 	```json
 	{
@@ -29,6 +30,7 @@
 			```
 #### - Login
 - url : /api/auth/login
+- method : POST
 - req :
 	```json
 	{
@@ -55,15 +57,19 @@
 ###  Team Api
 #### - Team Register
 - url : /api/competition/iot/register
+- method : POST
 - req :
 	```json
 	{
 		"team": {
-			"name": "binary",
-			"title": "binary IoT",
+			"name": "BinaryFest",
+			"title": "Binaryfest IoT",
 			"institute": "UTY",
-			"email": "binary@gmail.com",
-			"competition_type": "IoT",
+			"email": "binaryfest@gmail.com",
+			"competition_type": "uiux"
+		},
+		"submission": {
+			"submission_type": "1",
 			"url_files": "https://binaryfest.or.id/files"
 		},
 		"members": [
@@ -107,59 +113,71 @@
 			message: "error message",
 			error:
 			```
-### Service API
-#### - Send Email
-- url: /api/service/send-email
-- req:
+#### - Team Members
+- url : /api/team/members
+- method : GET
+- header :
+	```json
+	auth: recent_token
+	```
+- res :
 	```json
 	{
-		"mailType": "registration",
-		"subject": "Pendaftaran BinaryFest2021",
-		"receiver": [
-			{
-				"data": {
-					"name": "Tim Gundala"
+		"message": [{
+			"id_team": 15,
+			"name": "Djarum",
+			"email": "djarum@gmail.com",
+			"institute": "UTY",
+			"title": "Djarum IoT",
+			"competition_type": "iot",
+			"teamMembers": [
+				{
+					"id_team_member": 27,
+					"name": "Jaja",
+					"student_id": "519031188",
+					"gender": "man",
+					"isLeader": true,
+					"phone": "12345678"
 				},
-				"address": "timgundala@gmail.com"
-			},
+				{
+					"id_team_member": 28,
+					"name": "Maria",
+					"student_id": "519041055",
+					"gender": "woman",
+					"isLeader": false,
+					"phone": "87654321"
+				}
+			]
+		}]
+	}
+	```
+#### - Team Submissions
+- url : /api/team/submissions
+- method : GET
+- header :
+	```json
+	auth: recent_token
+	```
+- res :
+	```json
+	{
+		"message": [
 			{
-				"data": {
-					"name": "Tim Superman"
-				},
-				"address": "timsuperman@gmail.com"
-			},
-			{
-				"data": {
-					"name": "Tim Thor"
-				},
-				"address": "timthor@gmail.com"
-			},
-			{
-				"data": {
-					"name": "Tim Batman"
-				},
-				"address": "timbatman@gmail.com"
+				"id_team": 15,
+				"name": "Djarum",
+				"email": "djarum@gmail.com",
+				"institute": "UTY",
+				"title": "Djarum IoT",
+				"competition_type": "iot",
+				"teamSubmission": [
+					{
+						"id_team_submission": 2,
+						"submission_type": 1,
+						"url_files": "https://binaryfest.or.id/files",
+						"status": "pending"
+					}
+				]
 			}
 		]
 	}
 	```
-- res:
-	- success
-		```json
-		message: "Email was sent",
-		success: [
-			"timbatman@gmail.com", 
-			"timthor@gamil.com",
-			"timsuperman@gmail.com"
-		],
-		failed: ["timgundala@gmail.com"]
-		```
-	- error
-		- Max email recipients
-		```json
-		message: "Max email recipients are 20"
-		```
-		- No email was sent
-		```json
-		message: "No email was sent"
-		```
