@@ -16,9 +16,6 @@ export class TeamSubmission {
 
   @Column("smallint")
   submission_type: number
-
-  @Column()
-  submission_name: string
  
   @Column()
   url_files: string
