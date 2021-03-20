@@ -136,13 +136,17 @@ export class TeamController{
       .then(result => {
         const resData = result.map((e, i) => {
           delete e.createdAt; // remove createAt data at json
-          delete e.teamSubmission[i].createdAt; // remove createAt data at json
-          delete e.teamSubmission[i].updatedAt; // remove updateAt data at json
+          e.teamSubmission.map((r, i) => {
+            delete r.createdAt;
+            delete r.updatedAt;
+            return r;
+          });
           return e;
         })
+        
         console.log(resData)
         res.status(200).json({
-          message: resData
+          message: result
         })
         return;
       })
