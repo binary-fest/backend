@@ -144,9 +144,8 @@ export class TeamController{
           return e;
         })
         
-        console.log(resData)
         res.status(200).json({
-          message: result
+          message: resData
         })
         return;
       })
