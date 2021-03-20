@@ -12,7 +12,7 @@ export class TeamController{
 
   private teamRepository = getRepository(Team)
   private teamMemberRepository = getRepository(TeamMember)
-  private teamSubmission = getRepository(TeamSubmission)
+  private teamSubmissionRepository = getRepository(TeamSubmission)
   private authRepository = getRepository(Auth)
 
   async register(req: Request, res: Response){
@@ -61,7 +61,7 @@ export class TeamController{
         // input submission to submission table
         submission.team = team;
         submission.status = SubmissionStatus.pending;
-        await this.teamSubmission.save(submission)
+        await this.teamSubmissionRepository.save(submission)
           .then(() => {})
           .catch((err) => {
             res.status(400).json({
@@ -99,12 +99,52 @@ export class TeamController{
       })
   }
 
-  async all(req: Request, res: Response){
-    await this.teamRepository.find({competition_type: res.locals.userRole as any})
+  async allMembers(req: Request, res: Response){
+    // Get team & team members data based on admin role
+    await this.teamRepository.find({
+        relations: ["teamMembers"],
+        where: {
+          competition_type: res.locals.userRole as any
+        }
+      })
       .then(result => {
-        res.status(200).json({
-          message: result
+        const resData = result.map((e, i) => {
+          delete e.createdAt;
+          return e;
         })
+
+        res.status(200).json({
+          message: resData
+        })
+        return;
+      })
+      .catch(error => {
+        res.status(400).json({
+          message: error
+        })
+      })
+  }
+
+  async allSubmissions(req: Request, res: Response){
+    // Get team & team members data based on admin role
+    await this.teamRepository.find({
+      relations: ["teamSubmission"],
+      where: {
+        competition_type: res.locals.userRole as any
+      }
+    })
+      .then(result => {
+        const resData = result.map((e, i) => {
+          delete e.createdAt; // remove createAt data at json
+          delete e.teamSubmission[i].createdAt; // remove createAt data at json
+          delete e.teamSubmission[i].updatedAt; // remove updateAt data at json
+          return e;
+        })
+        console.log(resData)
+        res.status(200).json({
+          message: resData
+        })
+        return;
       })
       .catch(error => {
         res.status(400).json({
