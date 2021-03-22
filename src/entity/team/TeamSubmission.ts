@@ -1,6 +1,6 @@
-import { Column, Entity, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Team } from "./Team";
-import { TeamToken } from "./TeamToken";
+import { SubmissionToken } from "./SubmissionToken";
 
 export enum SubmissionStatus{
   pending = "pending",
@@ -26,13 +26,10 @@ export class TeamSubmission {
   @Column({ default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date
 
-  @Column({ default: () => "CURRENT_TIMESTAMP" })
-  updatedAt: Date
-
   @ManyToOne(type => Team, team => team.teamSubmission)
   team: Team
 
-  @OneToMany(type => TeamToken, teamToken => teamToken.teamSubmission)
-  teamToken: TeamToken[]
+  @OneToOne(() => SubmissionToken, submissionToken => submissionToken.teamSubmission)
+  submissionToken: SubmissionToken
 
 }

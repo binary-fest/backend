@@ -5,7 +5,7 @@ import { TeamMember } from "../entity/team/TeamMember";
 import { TeamSubmission, SubmissionStatus } from "../entity/team/TeamSubmission";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
-import { Auth } from "../entity/Auth";
+import { AdminAccount } from "../entity/AdminAccount";
 import { SingleMailService } from "../services/SingleMailService";
 
 export class TeamController{
@@ -13,7 +13,7 @@ export class TeamController{
   private teamRepository = getRepository(Team)
   private teamMemberRepository = getRepository(TeamMember)
   private teamSubmissionRepository = getRepository(TeamSubmission)
-  private authRepository = getRepository(Auth)
+  private authRepository = getRepository(AdminAccount)
 
   async register(req: Request, res: Response){
       
@@ -134,18 +134,8 @@ export class TeamController{
       }
     })
       .then(result => {
-        const resData = result.map((e, i) => {
-          delete e.createdAt; // remove createAt data at json
-          e.teamSubmission.map((r, i) => {
-            delete r.createdAt;
-            delete r.updatedAt;
-            return r;
-          });
-          return e;
-        })
-        
         res.status(200).json({
-          message: resData
+          message: result
         })
         return;
       })
