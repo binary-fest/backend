@@ -38,24 +38,38 @@ export const Routes = [
         action: "register"
     },
     {
+        method: "get",
+        route: "/api/teams",
+        controller: TeamController,
+        action: "getTeams",
+        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+    },
+    {
+        method: "get",
+        route: "/api/team/:teamId",
+        controller: TeamController,
+        action: "getTeamId",
+        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+    },
+    {
         method: "put",
         route: "/api/team/status",
         controller: TeamController,
         action: "status",
         middleware: [checkJwt, checkRole(['uiux', 'iot'])]
     },
-    {
-        method: "get",
-        route: "/api/team/members",
-        controller: TeamController,
-        action: "allMembers",
-        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    },
-    {
-        method: "get",
-        route: "/api/team/submissions",
-        controller: TeamController,
-        action: "allSubmissions",
-        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    }
+    // {
+    //     method: "get",
+    //     route: "/api/team/members",
+    //     controller: TeamController,
+    //     action: "allMembers",
+    //     middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+    // },
+    // {
+    //     method: "get",
+    //     route: "/api/team/submissions",
+    //     controller: TeamController,
+    //     action: "allSubmissions",
+    //     middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+    // }
 ];

@@ -100,51 +100,64 @@ export class TeamController{
       })
   }
 
-  async allMembers(req: Request, res: Response){
-    // Get team & team members data based on admin role
+  async getTeams(req: Request, res: Response){
     await this.teamRepository.find({
-        relations: ["teamMembers"],
+        relations: ["teamMembers","teamSubmission"],
         where: {
           competition_type: res.locals.userRole as any
         }
       })
       .then(result => {
-        const resData = result.map((e, i) => {
-          delete e.createdAt;
-          return e;
-        })
-
         res.status(200).json({
-          message: resData
+          message: result
         })
-        return;
       })
-      .catch(error => {
+      .catch(err => {
         res.status(400).json({
-          message: error
+          message: "No teams registered"
         })
       })
   }
 
-  async allSubmissions(req: Request, res: Response){
-    // Get team & team members data based on admin role
+  async getTeamId(req: Request, res: Response){
+    const { teamId } = req.params
+    
     await this.teamRepository.find({
-      relations: ["teamSubmission"],
-      where: {
-        competition_type: res.locals.userRole as any
-      }
-    })
+        relations: ["teamMembers", "teamSubmission"],
+        where: {
+          id_team: teamId,
+          competition_type: res.locals.userRole as any
+        }
+      })
       .then(result => {
         res.status(200).json({
           message: result
         })
-        return;
       })
-      .catch(error => {
+      .catch(err => {
         res.status(400).json({
-          message: error
+          message: "Team not registered"
         })
       })
+  }
+
+  async status(req: Request, res: Response){
+    const { email, status } = req.body
+    // Perubahan status harus manjadi approved atau rejected
+    const definedAllowStatus = ["approved", "rejected"]
+
+    let getTeamFromEmail: Team
+
+    try {
+      getTeamFromEmail = await this.teamRepository.findOneOrFail({email: email})
+    } catch (err) {
+      res.status(400).json({
+        message: "Email is not registered"
+      })
+      return;
+    }
+
+    
   }
 
   // async status(req: Request, res: Response){
