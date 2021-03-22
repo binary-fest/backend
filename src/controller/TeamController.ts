@@ -7,6 +7,7 @@ import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
 import { AdminAccount } from "../entity/AdminAccount";
 import { SingleMailService } from "../services/SingleMailService";
+import { generateToken, decryptToken } from "../config/CryptoToken";
 
 export class TeamController{
 
@@ -143,6 +144,7 @@ export class TeamController{
 
   async status(req: Request, res: Response){
     const { email, status } = req.body
+
     // Perubahan status harus manjadi approved atau rejected
     const definedAllowStatus = ["approved", "rejected"]
 
@@ -157,7 +159,13 @@ export class TeamController{
       return;
     }
 
+    const [ token, start, expired ] = generateToken(email, Date.now());
     
+    res.status(200).json({
+      token,
+      start,
+      expired
+    })
   }
 
   // async status(req: Request, res: Response){

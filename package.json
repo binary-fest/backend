@@ -4,6 +4,7 @@
    "description": "Awesome project developed with TypeORM.",
    "devDependencies": {
       "@types/compression": "^1.7.0",
+      "@types/crypto-js": "^4.0.1",
       "@types/express-rate-limit": "^5.1.1",
       "@types/node": "^8.0.29",
       "@types/nodemailer": "^6.4.0",
