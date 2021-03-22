@@ -1,4 +1,3 @@
-  
 import { Request, Response, NextFunction } from "express";
 import { getRepository } from "typeorm";
 
@@ -13,7 +12,7 @@ export const checkRole = (roles: Array<string>) => {
     const userRepository = getRepository(AdminAccount);
     let user: AdminAccount;
     try {
-      user = await userRepository.findOneOrFail(username);
+      user = await userRepository.findOneOrFail({username: username});
     } catch (username) {
       res.status(401).send();
     }

@@ -18,10 +18,9 @@ export class TeamController{
   async register(req: Request, res: Response){
       
     const { team, submission, members } = req.body as ReqTeamRegister;
-
     const checkExistEmail: Team = await this.teamRepository.findOne({ email: team.email })
 
-    if(team === undefined || (members === undefined)){
+    if((team === undefined) || (members === undefined) || (submission === undefined)){
       res.status(400).json({
         message: "Request Not Valid"
       })
@@ -55,17 +54,19 @@ export class TeamController{
     // Add status to team database
     team.competition_type = team.competition_type.toLocaleLowerCase() as any;
     
+    // input team to database
     await this.teamRepository
       .save(team)
       .then(async() => {
-        // input submission to submission table
+        // input submission to database
         submission.team = team;
         submission.status = SubmissionStatus.pending;
+
         await this.teamSubmissionRepository.save(submission)
           .then(() => {})
           .catch((err) => {
             res.status(400).json({
-              message: "Failed when set status submission",
+              message: "Failed when enter the submission",
               err
             })
             return;
