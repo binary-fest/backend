@@ -13,7 +13,7 @@ export class TeamController{
   private teamRepository = getRepository(Team)
   private teamMemberRepository = getRepository(TeamMember)
   private teamSubmissionRepository = getRepository(TeamSubmission)
-  private authRepository = getRepository(AdminAccount)
+  private adminRepository = getRepository(AdminAccount)
 
   async register(req: Request, res: Response){
       

@@ -1,4 +1,4 @@
-import {Entity, Column, PrimaryColumn} from "typeorm";
+import {Entity, Column, PrimaryGeneratedColumn} from "typeorm";
 import * as bcrypt from 'bcryptjs'
 
 export enum Role{
@@ -8,11 +8,10 @@ export enum Role{
 
 @Entity()
 export class AdminAccount {
+    @PrimaryGeneratedColumn()
+    id_admin: number
 
-    @PrimaryColumn({
-        length: 20,
-        unique: true
-    })
+    @Column({length: 20, unique: true})
     username: string
 
     @Column()

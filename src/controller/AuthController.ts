@@ -71,29 +71,29 @@ export class AuthController {
     user.hashPassword()
     
     await this.userRepository.findOneOrFail({
-      where: {
-          username
-      }
-    })
-    .then(() => {
-      res.status(409).json({
-          message: "username already in use"
+        where: {
+            username
+        }
       })
-    })
-    .catch(async () => {
-      await this.userRepository.save(user)
       .then(() => {
-        res.status(200).json({
-          message: "username was created"
+        res.status(409).json({
+            message: "username already in use"
         })
       })
-      .catch((error) => {
-        res.status(400).json({
-          message: "error occured",
-          error: error.message
-        })
+      .catch(async () => {
+        await this.userRepository.save(user)
+          .then(() => {
+            res.status(200).json({
+              message: "username was created"
+            })
+          })
+          .catch((error) => {
+            res.status(400).json({
+              message: "error occured",
+              error: error.message
+            })
+          })
       })
-    })
 
   }
 }
