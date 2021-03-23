@@ -57,19 +57,5 @@ export const Routes = [
         controller: TeamController,
         action: "status",
         middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    },
-    // {
-    //     method: "get",
-    //     route: "/api/team/members",
-    //     controller: TeamController,
-    //     action: "allMembers",
-    //     middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    // },
-    // {
-    //     method: "get",
-    //     route: "/api/team/submissions",
-    //     controller: TeamController,
-    //     action: "allSubmissions",
-    //     middleware: [checkJwt, checkRole(['uiux', 'iot'])]
-    // }
+    }
 ];

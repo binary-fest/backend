@@ -2,32 +2,6 @@
 - baseurl: https://api-binaryfest.herokuapp.com
 - development url: https://binaryfest-1111.herokuapp.com
 ###  Auth Api
-#### - Register
-- url : /api/auth/register
-- method : POST
-- req :
-	```json
-	{
-		"username": "adminbinary",
-		"password": "12345678",
-		"role": "ADMIN"
-	}
-	```
-- res :
-	- success
-		```json
-		message: "User was created"
-		```
-	- error
-		- user already in used
-			```json
-			message: "User Already in Used"
-			```
-		- another error
-			```json
-			message: "error message",
-			error:
-			```
 #### - Login
 - url : /api/auth/login
 - method : POST
@@ -41,8 +15,13 @@
 - res :
 	- success
 		```json
-		message: "Login success",
-		token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluYmluYXJ5IiwiaWF0IjoxNjEyMjU2MTY4LCJleHAiOjE2MTIyNjY5Njh9.ueU-ZMPdTBZqbzlotOHyynIZxgEfFXLCnYIzk0fH1eA"
+		{
+			"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluaW90IiwiaWF0IjoxNjE2NDkyMzMwLCJleHAiOjE2MTY1MDMxMzB9.94Twb8BQvb_YIo08u9GeCCMBNbWSxW4YDK-nVX67_LM",
+			"details": {
+				"username": "adminiot",
+				"role": "iot"
+			}
+		}
 		```
 	- error
 		- user already in used
@@ -113,6 +92,46 @@
 			message: "error message",
 			error:
 			```
+#### - Status Member
+- url : /api/team/status
+- method : PUT
+- header : 
+	```json
+	auth: recent_token
+	```
+- req :
+	```json
+	{
+		"email": "kuda@gmail.com",
+		"status": "approved"
+	}
+	```
+	status :
+	- approved
+	- rejected
+- res :
+	- success
+		```json
+		"message": "Email sended; Set status success"
+		```
+	- error
+		- email not registered
+			```json
+			"message": "Email is not registered"
+			```
+		- status not valid
+			```json
+			"message": "Status not available"
+			```
+		- role does not allow
+			```json
+			"message": "Role does not allow to change this team status"
+			```
+		- another error
+			```json
+			"message": "error message",
+			"error": {error}
+			```
 #### - Team Members
 - url : /api/team/members
 - method : GET
@@ -123,61 +142,79 @@
 - res :
 	```json
 	{
-		"message": [{
-			"id_team": 15,
-			"name": "Djarum",
-			"email": "djarum@gmail.com",
-			"institute": "UTY",
-			"title": "Djarum IoT",
+	"message": [
+		{
+			"id_team": 3,
+			"name": "Team Angsa",
+			"email": "angsa@gmail.com",
+			"institute": "University of Harvard",
+			"title": "Angsa Iot",
 			"competition_type": "iot",
+			"createdAt": "2021-03-22T07:18:24.990Z",
 			"teamMembers": [
 				{
-					"id_team_member": 27,
-					"name": "Jaja",
-					"student_id": "519031188",
+					"id_team_member": 4,
+					"name": "Dalmadi",
+					"student_id": "519041055",
 					"gender": "man",
 					"isLeader": true,
-					"phone": "12345678"
+					"phone": "87654321"
 				},
 				{
-					"id_team_member": 28,
-					"name": "Maria",
-					"student_id": "519041055",
-					"gender": "woman",
+					"id_team_member": 3,
+					"name": "Dilah",
+					"student_id": "519031188",
+					"gender": "women",
 					"isLeader": false,
-					"phone": "87654321"
+					"phone": "12345678"
+				}
+			],
+			"teamSubmission": [
+				{
+					"id_team_submission": 2,
+					"submission_type": 1,
+					"url_files": "https://binaryfest.or.id/files",
+					"status": "approved",
+					"createdAt": "2021-03-22T07:18:25.008Z"
 				}
 			]
-		}]
-	}
-	```
-#### - Team Submissions
-- url : /api/team/submissions
-- method : GET
-- header :
-	```json
-	auth: recent_token
-	```
-- res :
-	```json
-	{
-		"message": [
-			{
-				"id_team": 15,
-				"name": "Djarum",
-				"email": "djarum@gmail.com",
-				"institute": "UTY",
-				"title": "Djarum IoT",
-				"competition_type": "iot",
-				"teamSubmission": [
-					{
-						"id_team_submission": 2,
-						"submission_type": 1,
-						"url_files": "https://binaryfest.or.id/files",
-						"status": "pending"
-					}
-				]
-			}
-		]
+		},
+		{
+			"id_team": 6,
+			"name": "Team Kuda",
+			"email": "kuda@gmail.com",
+			"institute": "University of Harvard",
+			"title": "Kuda Iot",
+			"competition_type": "iot",
+			"createdAt": "2021-03-22T08:49:24.299Z",
+			"teamMembers": [
+				{
+					"id_team_member": 10,
+					"name": "Pandi",
+					"student_id": "519041055",
+					"gender": "man",
+					"isLeader": true,
+					"phone": "87654321"
+				},
+				{
+					"id_team_member": 9,
+					"name": "Jidah",
+					"student_id": "519031188",
+					"gender": "women",
+					"isLeader": false,
+					"phone": "12345678"
+				}
+			],
+			"teamSubmission": [
+				{
+					"id_team_submission": 5,
+					"submission_type": 1,
+					"url_files": "https://binaryfest.or.id/files",
+					"status": "approved",
+					"createdAt": "2021-03-22T08:49:24.320Z"
+				}
+			]
+		}
+	]
 	}
 	```

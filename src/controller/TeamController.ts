@@ -16,7 +16,6 @@ export class TeamController{
   private teamMemberRepository = getRepository(TeamMember)
   private teamSubmissionRepository = getRepository(TeamSubmission)
   private subTokenRepository = getRepository(SubmissionToken)
-  private adminRepository = getRepository(AdminAccount)
 
   async register(req: Request, res: Response){
       
@@ -203,12 +202,6 @@ export class TeamController{
           // Generate token for submission 
           const [token, start, expired] = generateToken(email);
 
-          // const submissionToken = new SubmissionToken()
-          // submissionToken.token = token
-          // submissionToken.startAt = start as any
-          // submissionToken.expiredAt = expired as any
-          // submissionToken.teamSubmission = getTeamSubmission;
-
           const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getTeamSubmission }) || this.subTokenRepository.create()
 
           await this.subTokenRepository.save({
@@ -253,78 +246,5 @@ export class TeamController{
         })
       })
   }
-
-  // async status(req: Request, res: Response){
-  //   const { email, status } = req.body
-  //   // perubahan status harus menjadi approved atau rejected
-  //   const defineAllowStatus = ["approved", "rejected"]
-
-  //   let getTeamFromEmail: Team
-
-  //   try{
-  //     getTeamFromEmail= await this.teamRepository.findOneOrFail({email: email})
-  //   }catch(err){
-  //     res.status(400).json({
-  //       message: "email is not registered"
-  //     })
-  //     return;
-  //   }
-
-  //   // Status must be change to approved or rejected
-  //   if (!defineAllowStatus.includes(status)) {
-  //     res.status(400).json({
-  //       message: "Status method not available"
-  //     })
-  //     return;
-  //   }
-
-  //   // every admin must change the status of their members 
-  //   if (res.locals.userRole !== getTeamFromEmail.competition_type) {
-  //     res.status(400).json({
-  //       message: "role does not match to change this team status"
-  //     })
-  //     return;
-  //   }
-
-  //   getTeamFromEmail.status = status as TeamStatus
-
-  //   const mailData = {
-  //     mailtype: `reg_${status}`,
-  //     subject: 'Registration Information',
-  //     receiver: getTeamFromEmail.email,
-  //     maildata: {
-  //       name: getTeamFromEmail.name
-  //     }
-  //   }
-
-  //   SingleMailService(mailData.mailtype, mailData.subject, mailData.receiver, mailData.maildata)
-  //     .then(async () => {  
-  //       // save changes to database
-  //       await this.teamRepository.save(getTeamFromEmail)
-  //         .then(() => {
-  //           res.status(200).json({
-  //             message: "team status was updated",
-  //             email_msg: "Email sent to team email",
-  //             team_data: {
-  //               name: getTeamFromEmail.name,
-  //               email: getTeamFromEmail.email,
-  //               status: getTeamFromEmail.status
-  //             }
-  //           })
-  //         })
-  //         .catch(() => {
-  //           res.status(500).json({
-  //             message: "has an error when saving data"
-  //           })
-  //         })
-  //     })
-  //     .catch((err) => {
-  //       res.status(400).json({
-  //         message: 'Set status failed because email not sent',
-  //         err
-  //       })
-  //     })
-      
-  // }
 
 }
