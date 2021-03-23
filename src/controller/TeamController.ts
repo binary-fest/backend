@@ -3,6 +3,7 @@ import { getRepository } from "typeorm";
 import { Team } from "../entity/team/Team";
 import { TeamMember } from "../entity/team/TeamMember";
 import { TeamSubmission, SubmissionStatus } from "../entity/team/TeamSubmission";
+import { SubmissionToken } from "../entity/team/SubmissionToken";
 import { ReqTeamRegister } from "../model/ReqTeamRegister";
 import { TeamStatus } from "../model/TeamStatusEnum";
 import { AdminAccount } from "../entity/AdminAccount";
@@ -14,6 +15,7 @@ export class TeamController{
   private teamRepository = getRepository(Team)
   private teamMemberRepository = getRepository(TeamMember)
   private teamSubmissionRepository = getRepository(TeamSubmission)
+  private subTokenRepository = getRepository(SubmissionToken)
   private adminRepository = getRepository(AdminAccount)
 
   async register(req: Request, res: Response){
@@ -149,6 +151,7 @@ export class TeamController{
     const definedAllowStatus = ["approved", "rejected"]
 
     let getTeamFromEmail: Team
+    let getTeamSubmission: TeamSubmission
 
     try {
       getTeamFromEmail = await this.teamRepository.findOneOrFail({email: email})
@@ -159,13 +162,96 @@ export class TeamController{
       return;
     }
 
-    const [ token, start, expired ] = generateToken(email, Date.now());
+    if (!definedAllowStatus.includes(status)) {
+      res.status(400).json({
+        message: "Status not available"
+      })
+      return;
+    }
+
+    if (res.locals.userRole !== getTeamFromEmail.competition_type) {
+      res.status(400).json({
+        message: "Role does not allow to change this team status"
+      })
+      return;
+    }
+
+    // Get submission with teamId
+    try {
+      getTeamSubmission = await this.teamSubmissionRepository.findOneOrFail({team: getTeamFromEmail});
+    } catch (error) {
+      res.status(400).json({
+        message: "Error get submission",
+        error
+      })
+      return;
+    }
+
+    if (getTeamSubmission.status === TeamStatus[status]) {
+      res.status(400).json({
+        message: `Status in a ${status} approved right now`
+      })
+      return;
+    }
+
+    getTeamSubmission.status = TeamStatus[status] as any;
     
-    res.status(200).json({
-      token,
-      start,
-      expired
-    })
+    await this.teamSubmissionRepository.save(getTeamSubmission)
+      .then(async () => {
+        // Jika status approved, maka akan generate token dan save token ke database
+        if (status === TeamStatus.approved) {
+          // Generate token for submission 
+          const [token, start, expired] = generateToken(email);
+
+          // const submissionToken = new SubmissionToken()
+          // submissionToken.token = token
+          // submissionToken.startAt = start as any
+          // submissionToken.expiredAt = expired as any
+          // submissionToken.teamSubmission = getTeamSubmission;
+
+          const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getTeamSubmission }) || this.subTokenRepository.create()
+
+          await this.subTokenRepository.save({
+              ...getRecentToken,
+              token: token,
+              startAt: start,
+              expiredAt: expired,
+              teamSubmission: getTeamSubmission
+            })
+            .then(() => {})
+            .catch((error) => {
+              res.status(400).json({
+                message: "Error set team status",
+                error
+              })
+              return;
+            })
+        }
+        // Send email 
+        await SingleMailService({
+            mailtype: `reg_${status}`,
+            subject: "Informasi Pendaftaran",
+            receiver: email,
+            maildata: {name: getTeamFromEmail.name}
+          })
+          .then(() => {
+            res.status(200).json({
+              message: "Email sended; Set status success"
+            })
+          })
+          .catch(error => {
+            res.status(400).json({
+              message: "Email not sended",
+              error
+            })
+          })
+      })
+      .catch(err => {
+        res.status(400).json({
+          message: "There is an error",
+          err
+        })
+      })
   }
 
   // async status(req: Request, res: Response){

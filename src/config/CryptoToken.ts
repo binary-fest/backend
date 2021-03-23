@@ -1,14 +1,18 @@
 import * as CryptoJS from "crypto-js";
 import config from "./config";
 
-export const generateToken = (email: String, date: Number) => {
-  const recentDate = new Date(date as any);
+const dateFix = (date: number) => {
+  return (date < 10) ? `0${date}` : `${date}`
+} 
+
+export const generateToken = (email: String) => {
+  const recentDate = new Date(Date.now());
   // definisi tanggal token
-  const start = `${recentDate.getFullYear()}-${recentDate.getMonth()}-${recentDate.getDate()}`
+  const start = `${recentDate.getFullYear()}-${dateFix(recentDate.getMonth()+1)}-${dateFix(recentDate.getDate())}`
   // set token, token berlaku selama 7 hari
-  recentDate.setDate(recentDate.getDate() + 14) 
+  recentDate.setDate(recentDate.getDate() + 7) 
   // definisi tanggal expired token
-  const expired = `${recentDate.getFullYear()}-${recentDate.getMonth()}-${recentDate.getDate()}`
+  const expired = `${recentDate.getFullYear()}-${dateFix(recentDate.getMonth()+1)}-${dateFix(recentDate.getDate())}`
 
   // Data yang akan di generate menjadi token, di beri pemisah "/"
   const tokenData = `${email}/${start}/${expired}`

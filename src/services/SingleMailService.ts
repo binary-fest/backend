@@ -1,7 +1,14 @@
 import * as nodemailer from 'nodemailer';
 import * as template from '../templates';
 
-export const SingleMailService = async (mailtype: string, subject: string, receiver: string, maildata: object) => {
+interface mailDataObj{
+  mailtype: string, 
+  subject: string, 
+  receiver: string, 
+  maildata: object
+}
+
+export const SingleMailService = async ({mailtype, subject, receiver, maildata}: mailDataObj) => {
 
   // Email transport 
   let transporter = nodemailer.createTransport({

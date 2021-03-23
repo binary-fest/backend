@@ -9,14 +9,15 @@ export class SubmissionToken{
 
     @Column({
         unique: true,
-        nullable: true
+        nullable: true,
+        length: 255
     })
     token: string
 
-    @Column('date')
+    @Column({type: 'date'})
     startAt: Date
 
-    @Column('date')
+    @Column({type: 'date'})
     expiredAt: Date
 
     @OneToOne(() => TeamSubmission, teamSubmission => teamSubmission.submissionToken)
