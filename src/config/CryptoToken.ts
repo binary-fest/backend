@@ -33,17 +33,26 @@ export const generateToken = (email: String) => {
   return [ token, start, expired ]
 }
 
-export const decryptToken = (token: any) => {
-  const parseToken = CryptoJS.enc.Base64.parse(token)
-  const parseStr = parseToken.toString(CryptoJS.enc.Utf8);
+export const decryptToken = async (token: any) => {
+  // return new Promise((resolve, reject) => {
 
-  const tokenDecrypt = CryptoJS.Rabbit.decrypt(
-    parseStr,
-    process.env.subKeyToken || config.subKeyToken,
-    {
-      mode: CryptoJS.mode.ECB
-    }
-  ).toString(CryptoJS.enc.Utf8)
+  // })
+  const parseToken = await CryptoJS.enc.Base64.parse(token)
+  let parseStr, tokenDecrypt: any;
+  
+  try{
+    parseStr = parseToken.toString(CryptoJS.enc.Utf8)
+
+    tokenDecrypt = CryptoJS.Rabbit.decrypt(
+      parseStr,
+      process.env.subKeyToken || config.subKeyToken,
+      {
+        mode: CryptoJS.mode.ECB
+      }
+    ).toString(CryptoJS.enc.Utf8)
+  } catch(error){
+    throw new Error(error);
+  }
 
   return tokenDecrypt
 }

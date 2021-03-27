@@ -247,4 +247,59 @@ export class TeamController{
       })
   }
 
+  async checkToken(req: Request, res: Response) {
+    let getToken: string
+
+    try{
+      getToken = await decryptToken(req.query.token)
+    } catch(err){
+      res.status(400).json({
+        message: "Token unvalid",
+        reason: err.message
+      })
+      return;
+    }
+
+    const [email] = getToken.split("/")
+
+    await this.teamRepository.findOneOrFail({email: email})
+      .then(async team => {
+        await this.teamSubmissionRepository.findOneOrFail({
+            relations: ["submissionToken","team"],
+            where: { team: team }
+          })
+          .then(({submissionToken: { expiredAt }, team}) => {
+            const expiredDate = new Date(expiredAt)
+            const nowDate = new Date()
+            
+            if(!(expiredDate.getTime() < nowDate.getTime())){
+              res.status(200).json({
+                message: "Token found",
+                team: {
+                  name: team.name,
+                  email: team.email,
+                  institute: team.institute
+                }
+              })
+              return;
+            }
+            res.status(400).json({
+              message: "Token expired",
+            })
+          })
+          .catch(err => {
+            res.status(400).json({
+              message: "An error",
+              err
+            })
+          })
+      })  
+      .catch(err => {
+        res.status(400).json({
+          message: "email not found",
+          err
+        })
+      })
+  }
+
 }
