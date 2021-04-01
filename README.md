@@ -92,7 +92,7 @@
 			message: "error message",
 			error:
 			```
-#### - Status Member
+#### - Update Status Member
 - url : /api/team/status
 - method : PUT
 - header : 
@@ -132,8 +132,8 @@
 			"message": "error message",
 			"error": {error}
 			```
-#### - Team Members
-- url : /api/team/members
+#### - Show Teams
+- url : /api/teams
 - method : GET
 - header :
 	```json
@@ -216,5 +216,53 @@
 			]
 		}
 	]
+	}
+	```
+#### - Show Team by id
+- url : /api/team/:id_team
+- method : GET
+- header :
+	```json
+	auth: recent_token
+	```
+- res :
+	```json
+	{
+		"message": {
+			"id_team": 1,
+			"name": "Team Kura",
+			"email": "kura@gmail.com",
+			"institute": "University of Nevada - Reno",
+			"title": "Kura UIUX",
+			"competition_type": "uiux",
+			"createdAt": "2021-03-22T07:13:16.814Z",
+			"teamMembers": [
+				{
+					"id_team_member": 1,
+					"name": "Farah",
+					"student_id": "519031188",
+					"gender": "man",
+					"isLeader": false,
+					"phone": "12345678"
+				},
+				{
+					"id_team_member": 2,
+					"name": "Rere",
+					"student_id": "519041055",
+					"gender": "woman",
+					"isLeader": true,
+					"phone": "87654321"
+				}
+			],
+			"teamSubmission": [
+				{
+					"id_team_submission": 1,
+					"submission_type": 1,
+					"url_files": "https://binaryfest.or.id/files",
+					"status": "approved",
+					"createdAt": "2021-03-22T07:13:16.829Z"
+				}
+			]
+		}
 	}
 	```

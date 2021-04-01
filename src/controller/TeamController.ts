@@ -124,7 +124,7 @@ export class TeamController{
   async getTeamId(req: Request, res: Response){
     const { teamId } = req.params
     
-    await this.teamRepository.find({
+    await this.teamRepository.findOneOrFail({
         relations: ["teamMembers", "teamSubmission"],
         where: {
           id_team: teamId,
@@ -138,7 +138,7 @@ export class TeamController{
       })
       .catch(err => {
         res.status(400).json({
-          message: "Team not registered"
+          message: "Team not registered or role not allowed"
         })
       })
   }
