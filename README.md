@@ -24,9 +24,9 @@
 		}
 		```
 	- error
-		- user already in used
+		- Passwird not valid
 			```json
-			message: "User Already in Used"
+			message: "UnencryptedPasswordIsNotValid"
 			```
 		- another error
 			```json
@@ -35,6 +35,7 @@
 			```
 ###  Team Api
 #### - Team Register
+- description: pendaftaran peserta/tim lomba & submission ke-1
 - url : /api/competition/iot/register
 - method : POST
 - req :
@@ -92,7 +93,8 @@
 			message: "error message",
 			error:
 			```
-#### - Update Status Member
+#### - Update Team Status
+- description: merubah status tim dari pending ke approved / rejected & kirim email kepada tim
 - url : /api/team/status
 - method : PUT
 - header : 
@@ -106,9 +108,9 @@
 		"status": "approved"
 	}
 	```
-	status :
-	- approved
-	- rejected
+	status : 
+	> - approved
+	> - rejected
 - res :
 	- success
 		```json
@@ -132,7 +134,8 @@
 			"message": "error message",
 			"error": {error}
 			```
-#### - Show Teams
+#### - Show All Team
+- description: menampilkan semua tim berdasarkan role admin & kompetisi yang diikuti tim
 - url : /api/teams
 - method : GET
 - header :
@@ -140,85 +143,59 @@
 	auth: recent_token
 	```
 - res :
-	```json
-	{
-	"message": [
+	- success
+		```json
 		{
-			"id_team": 3,
-			"name": "Team Angsa",
-			"email": "angsa@gmail.com",
-			"institute": "University of Harvard",
-			"title": "Angsa Iot",
-			"competition_type": "iot",
-			"createdAt": "2021-03-22T07:18:24.990Z",
-			"teamMembers": [
-				{
-					"id_team_member": 4,
-					"name": "Dalmadi",
-					"student_id": "519041055",
-					"gender": "man",
-					"isLeader": true,
-					"phone": "87654321"
-				},
-				{
-					"id_team_member": 3,
-					"name": "Dilah",
-					"student_id": "519031188",
-					"gender": "women",
-					"isLeader": false,
-					"phone": "12345678"
-				}
-			],
-			"teamSubmission": [
-				{
-					"id_team_submission": 2,
-					"submission_type": 1,
-					"url_files": "https://binaryfest.or.id/files",
-					"status": "approved",
-					"createdAt": "2021-03-22T07:18:25.008Z"
-				}
-			]
-		},
-		{
-			"id_team": 6,
-			"name": "Team Kuda",
-			"email": "kuda@gmail.com",
-			"institute": "University of Harvard",
-			"title": "Kuda Iot",
-			"competition_type": "iot",
-			"createdAt": "2021-03-22T08:49:24.299Z",
-			"teamMembers": [
-				{
-					"id_team_member": 10,
-					"name": "Pandi",
-					"student_id": "519041055",
-					"gender": "man",
-					"isLeader": true,
-					"phone": "87654321"
-				},
-				{
-					"id_team_member": 9,
-					"name": "Jidah",
-					"student_id": "519031188",
-					"gender": "women",
-					"isLeader": false,
-					"phone": "12345678"
-				}
-			],
-			"teamSubmission": [
-				{
-					"id_team_submission": 5,
-					"submission_type": 1,
-					"url_files": "https://binaryfest.or.id/files",
-					"status": "approved",
-					"createdAt": "2021-03-22T08:49:24.320Z"
-				}
-			]
+		"message": [
+			{
+				"id_team": 3,
+				"name": "Team Angsa",
+				"email": "angsa@gmail.com",
+				"institute": "University of Harvard",
+				"title": "Angsa Iot",
+				"competition_type": "iot",
+				"createdAt": "2021-03-22T07:18:24.990Z",
+				"teamMembers": [
+					{
+						"id_team_member": 4,
+						"name": "Dalmadi",
+						"student_id": "519041055",
+						"gender": "man",
+						"isLeader": true,
+						"phone": "87654321"
+					},
+					{
+						"id_team_member": 3,
+						"name": "Dilah",
+						"student_id": "519031188",
+						"gender": "women",
+						"isLeader": false,
+						"phone": "12345678"
+					}
+				],
+				"teamSubmission": [
+					{
+						"id_team_submission": 2,
+						"submission_type": 1,
+						"url_files": "https://binaryfest.or.id/files",
+						"status": "approved",
+						"createdAt": "2021-03-22T07:18:25.008Z"
+					}
+				]
+			},
+			{
+				...another IoT team
+			}
+		]
 		}
-	]
-	}
-	```
+		```
+	- error
+		- no team registered
+			```json
+			"message": "no team registered"
+			```
 #### - Show Team by id
+- description : menampilkan tim berdasarkan role admin & id tim
 - url : /api/team/:id_team
 - method : GET
 - header :
@@ -226,43 +203,85 @@
 	auth: recent_token
 	```
 - res :
-	```json
-	{
-		"message": {
-			"id_team": 1,
-			"name": "Team Kura",
-			"email": "kura@gmail.com",
-			"institute": "University of Nevada - Reno",
-			"title": "Kura UIUX",
-			"competition_type": "uiux",
-			"createdAt": "2021-03-22T07:13:16.814Z",
-			"teamMembers": [
-				{
-					"id_team_member": 1,
-					"name": "Farah",
-					"student_id": "519031188",
-					"gender": "man",
-					"isLeader": false,
-					"phone": "12345678"
-				},
-				{
-					"id_team_member": 2,
-					"name": "Rere",
-					"student_id": "519041055",
-					"gender": "woman",
-					"isLeader": true,
-					"phone": "87654321"
-				}
-			],
-			"teamSubmission": [
-				{
-					"id_team_submission": 1,
-					"submission_type": 1,
-					"url_files": "https://binaryfest.or.id/files",
-					"status": "approved",
-					"createdAt": "2021-03-22T07:13:16.829Z"
-				}
-			]
+	- success
+		```json
+		{
+			"message": {
+				"id_team": 1,
+				"name": "Team Kura",
+				"email": "kura@gmail.com",
+				"institute": "University of Nevada - Reno",
+				"title": "Kura UIUX",
+				"competition_type": "uiux",
+				"createdAt": "2021-03-22T07:13:16.814Z",
+				"teamMembers": [
+					{
+						"id_team_member": 1,
+						"name": "Farah",
+						"student_id": "519031188",
+						"gender": "man",
+						"isLeader": false,
+						"phone": "12345678"
+					},
+					{
+						"id_team_member": 2,
+						"name": "Rere",
+						"student_id": "519041055",
+						"gender": "woman",
+						"isLeader": true,
+						"phone": "87654321"
+					}
+				],
+				"teamSubmission": [
+					{
+						"id_team_submission": 1,
+						"submission_type": 1,
+						"url_files": "https://binaryfest.or.id/files",
+						"status": "approved",
+						"createdAt": "2021-03-22T07:13:16.829Z"
+					}
+				]
+			}
 		}
-	}
+		```
+	- error
+		- team not registered
+			```json
+			"message": "Team not registered or role not allowed"
+			```
+###  Team Submission
+#### - Check Submission Token
+- description : cek token submission (token didapat dari email tim ketika status tim 'approved')
+- url : /api/submission/check
+- method : GET
+- request query :
+	```json
+	?token=submission_token
 	```
+- res : 
+	- success
+		```json
+		{
+			"message": "Token found",
+			"team": {
+				"name": "Team Kura",
+				"email": "kura@gmail.com",
+				"institute": "University of Nevada - Reno"
+			}
+		}
+		```
+	- error
+		- token unvalid
+			```json
+			message: "Token unvalid",
+			reason: error message
+			```
+		- token expired
+			```json
+			message: "Token expired",
+			```
+		- another error
+			```json
+			message: error message,
+			err
+			```

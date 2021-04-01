@@ -58,7 +58,15 @@ export const Routes = [
         action: "status",
         middleware: [checkJwt, checkRole(['uiux', 'iot'])]
     },
-    //Token checker
+    // Team submission
+    {
+        method: "post",
+        route: "/api/team/submission",
+        controller: TeamController,
+        action: "nextSubmission",
+        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+    },
+    // Token Submission check
     {
         method: "get",
         route: "/api/submission/check",
