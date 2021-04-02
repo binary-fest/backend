@@ -36,7 +36,7 @@
 ###  Team Api
 #### - Team Register
 - description: pendaftaran peserta/tim lomba & submission ke-1
-- url : /api/competition/iot/register
+- url : /api/competition/register
 - method : POST
 - req :
 	```json
