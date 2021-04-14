@@ -5,6 +5,7 @@ import { SendEmailController } from "./controller/SendEmailController";
 import { checkJwt } from "./middleware/checkJwt";
 import { checkRole } from './middleware/checkRole'
 import { noCheck } from "./middleware/noCheck";
+import { TestController } from "./controller/TestController";
 
 export const Routes = [
     // home routes
@@ -72,6 +73,15 @@ export const Routes = [
         route: "/api/submission/check",
         controller: TeamController,
         action: "checkToken",
+        middleware: noCheck
+    },
+
+    // test send email
+    {
+        method: "get",
+        route: "/api/sendmail/:email",
+        controller: TestController,
+        action: "sendmail",
         middleware: noCheck
     }
 ];

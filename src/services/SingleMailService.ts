@@ -12,9 +12,9 @@ export const SingleMailService = async ({mailtype, subject, receiver, maildata}:
 
   // Email transport 
   let transporter = nodemailer.createTransport({
-    host: "smtp.mailtrap.io",
-    port: 2525,
-    secure: false, // true for 465, false for other ports
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true, // true for 465, false for other ports
     auth: {
       user: process.env.MAIL_USER, // generated ethereal user
       pass: process.env.MAIL_PASS, // generated ethereal password

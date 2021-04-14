@@ -1,30 +1,29 @@
 import {NextFunction, Request, Response} from "express";
-import * as cloudinary from 'cloudinary'
-import { ErrorCallback } from "typescript";
-
-const cloudinaryV2 = cloudinary.v2
+import { SingleMailService } from "../services/SingleMailService";
 
 export class TestController{
 
-    async testCloudinary(req: Request, res: Response, next: NextFunction){
-        const { url } = req.body
+    async sendmail(req: Request, res: Response){
+        const { email } = req.params
 
-        await cloudinaryV2.uploader.upload(url, {
-            folder: "web/test"
+        await SingleMailService({
+            mailtype: 'reg_approved',
+            subject: "Informasi Pendaftaran",
+            receiver: email,
+            maildata: {name: email.split("@")[0]}
         })
-        .then((result) => {
+        .then(() => {
             res.status(200).json({
-                message: "success",
-                result: result
+                status: 200,
+                message: 'Email sended. Check your email!'
             })
         })
-        .catch((error) => {
+        .catch(() => {
             res.status(400).json({
-                message: "error",
-                result: error
+                status: 400,
+                message: "Email failed to send!"
             })
         })
-
     }
 
 }
