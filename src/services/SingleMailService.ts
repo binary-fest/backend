@@ -1,14 +1,14 @@
 import * as nodemailer from 'nodemailer';
-import * as template from '../templates';
+import { MailTemplateObj } from '../model/MailTemplateObj';
+import MailTemplate from '../templates/MailTemplate';
 
 interface mailDataObj{
-  mailtype: string, 
   subject: string, 
   receiver: string, 
-  maildata: object
+  maildata: MailTemplateObj
 }
 
-export const SingleMailService = async ({mailtype, subject, receiver, maildata}: mailDataObj) => {
+export const SingleMailService = async ({subject, receiver, maildata}: mailDataObj) => {
 
   // Email transport 
   let transporter = nodemailer.createTransport({
@@ -25,7 +25,7 @@ export const SingleMailService = async ({mailtype, subject, receiver, maildata}:
       from: '"BinaryFest" <binaryfest.uty@gmail.com>', // sender address
       to: receiver, // list of receivers
       subject: subject, // Subject line
-      html: template[mailtype](maildata) // html body
+      html: MailTemplate(maildata) // html body
     })
 
 }

@@ -9,6 +9,7 @@ import { TeamStatus } from "../model/TeamStatusEnum";
 import { AdminAccount } from "../entity/AdminAccount";
 import { SingleMailService } from "../services/SingleMailService";
 import { generateToken, decryptToken } from "../config/CryptoToken";
+import { EmailSend } from "../entity/team/EmailSend";
 
 export class TeamController{
 
@@ -16,6 +17,7 @@ export class TeamController{
   private teamMemberRepository = getRepository(TeamMember)
   private teamSubmissionRepository = getRepository(TeamSubmission)
   private subTokenRepository = getRepository(SubmissionToken)
+  private emailSendRepository = getRepository(EmailSend)
 
   async register(req: Request, res: Response){
       
@@ -108,10 +110,32 @@ export class TeamController{
         where: {
           competition_type: res.locals.userRole as any
         }
+        // submission1
       })
       .then(result => {
+        const resFilter = []
+
+        for (let i = 0; i < result.length; i++) {
+          
+          let data: any = {
+            ...result[i],
+          }
+
+          Object.assign(data,...result[i].teamSubmission.map((x, i) => ({ [`teamSubmission${x.submission_type}`]: x })));
+          
+          if (!data.teamSubmission2) {
+            Object.assign(data, {teamSubmission2: null})
+          }
+          if (!data.teamSubmission1) {
+            Object.assign(data, { teamSubmission1: null })
+          }
+          delete data.teamSubmission
+          resFilter.push(data)
+          data = null
+        }
+        
         res.status(200).json({
-          message: result
+          message: resFilter
         })
       })
       .catch(err => {
@@ -138,114 +162,214 @@ export class TeamController{
       })
       .catch(err => {
         res.status(400).json({
-          message: "Team not registered or role not allowed"
+          message: "Team not registered or role not allowed",
         })
       })
   }
 
-  async status(req: Request, res: Response){
-    const { email, status } = req.body
+  async getTeamBySubmission(req: Request, res: Response){
+    const { type }: any = req.params
 
+    await this.teamRepository.find({
+        relations: ["teamMembers", "teamSubmission"],
+        where: {
+          competition_type: res.locals.userRole as any
+        }
+      })
+    .then(result => {
+      const resFilter = [];
+
+      for (const val of result) {
+        for (const _val of val.teamSubmission) {
+          if (_val.submission_type == type) {
+            resFilter.push(val)
+          }
+        }
+      }
+
+      res.status(200).json({
+        message: resFilter
+      })
+    })
+  }
+
+  async putStatus(req: Request, res: Response){
+    const { to, subject, status, message, type } = req.body
     // Perubahan status harus manjadi approved atau rejected
     const definedAllowStatus = ["approved", "rejected"]
 
-    let getTeamFromEmail: Team
-    let getTeamSubmission: TeamSubmission
+    let getTeam: Team
+    let getSubmission: TeamSubmission
+
+    try{
+      getTeam = await this.teamRepository.findOneOrFail({
+        relations: ["teamSubmission"],
+        where: { email: to, competition_type: res.locals.userRole}
+      })
+    }catch(err){
+      res.status(400).json({
+        message: "Email not found!"
+      })
+      return;
+    }
 
     try {
-      getTeamFromEmail = await this.teamRepository.findOneOrFail({email: email})
-    } catch (err) {
-      res.status(400).json({
-        message: "Email is not registered"
+      getSubmission = await this.teamSubmissionRepository.findOneOrFail({ 
+        submission_type: type, 
+        team: getTeam 
       })
-      return;
-    }
-
-    if (!definedAllowStatus.includes(status)) {
-      res.status(400).json({
-        message: "Status not available"
-      })
-      return;
-    }
-
-    if (res.locals.userRole !== getTeamFromEmail.competition_type) {
-      res.status(400).json({
-        message: "Role does not allow to change this team status"
-      })
-      return;
-    }
-
-    // Get submission with teamId
-    try {
-      getTeamSubmission = await this.teamSubmissionRepository.findOneOrFail({team: getTeamFromEmail});
     } catch (error) {
       res.status(400).json({
-        message: "Error get submission",
-        error
+        message: "Submission not found!"
       })
       return;
     }
 
-    if (getTeamSubmission.status === TeamStatus[status]) {
+    if ((TeamStatus[status] === getSubmission.status) || !definedAllowStatus.includes(status)) {
       res.status(400).json({
-        message: `Status in a ${status} approved right now`
+        message: "Status invalid, please check!"
       })
       return;
     }
 
-    getTeamSubmission.status = TeamStatus[status] as any;
-    
-    await this.teamSubmissionRepository.save(getTeamSubmission)
-      .then(async () => {
-        // Jika status approved, maka akan generate token dan save token ke database
-        if (status === TeamStatus.approved) {
-          // Generate token for submission 
-          const [token, start, expired] = generateToken(email);
+    // getSubmission.status = TeamStatus[status] as any
 
-          const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getTeamSubmission }) || this.subTokenRepository.create()
+    await this.teamSubmissionRepository.save(getSubmission)
+      .then(async () => {
+        if (status === "approved") {
+          const [token, start, expired] = generateToken(to);
+
+          const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getSubmission }) || this.subTokenRepository.create()
 
           await this.subTokenRepository.save({
               ...getRecentToken,
               token: token,
               startAt: start,
               expiredAt: expired,
-              teamSubmission: getTeamSubmission
+              teamSubmission: getTeam
             })
-            .then(() => {})
-            .catch((error) => {
-              res.status(400).json({
-                message: "Error set team status",
-                error
-              })
-              return;
-            })
+            .then(async () => {})
+            .catch(err => res.status(400).json({message: "Error when save token"}))
         }
-        // Send email 
-        await SingleMailService({
-            mailtype: `reg_${status}`,
-            subject: "Informasi Pendaftaran",
-            receiver: email,
-            maildata: {name: getTeamFromEmail.name}
-          })
-          .then(() => {
-            res.status(200).json({
-              message: "Email sended; Set status success"
-            })
-          })
-          .catch(error => {
-            res.status(400).json({
-              message: "Email not sended",
-              error
-            })
-          })
+
       })
       .catch(err => {
         res.status(400).json({
-          message: "There is an error",
+          message: "error saving data!",
           err
         })
       })
+
+    res.status(200).json({
+      message: "Success",
+      getSubmission
+    })
+    
   }
+
+  // async status(req: Request, res: Response){
+  //   const { email, status } = req.body
+
+  //   // Perubahan status harus manjadi approved atau rejected
+  //   const definedAllowStatus = ["approved", "rejected"]
+
+  //   let getTeamFromEmail: Team
+  //   let getTeamSubmission: TeamSubmission
+
+  //   try {
+  //     getTeamFromEmail = await this.teamRepository.findOneOrFail({email: email})
+  //   } catch (err) {
+  //     res.status(400).json({
+  //       message: "Email is not registered"
+  //     })
+  //     return;
+  //   }
+
+  //   if (!definedAllowStatus.includes(status)) {
+  //     res.status(400).json({
+  //       message: "Status not available"
+  //     })
+  //     return;
+  //   }
+
+  //   if (res.locals.userRole !== getTeamFromEmail.competition_type) {
+  //     res.status(400).json({
+  //       message: "Role does not allow to change this team status"
+  //     })
+  //     return;
+  //   }
+
+  //   // Get submission with teamId
+  //   try {
+  //     getTeamSubmission = await this.teamSubmissionRepository.findOneOrFail({team: getTeamFromEmail});
+  //   } catch (error) {
+  //     res.status(400).json({
+  //       message: "Error get submission",
+  //       error
+  //     })
+  //     return;
+  //   }
+
+  //   if (getTeamSubmission.status === TeamStatus[status]) {
+  //     res.status(400).json({
+  //       message: `Status in a ${status} approved right now`
+  //     })
+  //     return;
+  //   }
+
+  //   getTeamSubmission.status = TeamStatus[status] as any;
+    
+  //   await this.teamSubmissionRepository.save(getTeamSubmission)
+  //     .then(async () => {
+  //       // Jika status approved, maka akan generate token dan save token ke database
+  //       if (status === TeamStatus.approved) {
+  //         // Generate token for submission 
+  //         const [token, start, expired] = generateToken(email);
+
+  //         const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getTeamSubmission }) || this.subTokenRepository.create()
+
+  //         await this.subTokenRepository.save({
+  //             ...getRecentToken,
+  //             token: token,
+  //             startAt: start,
+  //             expiredAt: expired,
+  //             teamSubmission: getTeamSubmission
+  //           })
+  //           .then(() => {})
+  //           .catch((error) => {
+  //             res.status(400).json({
+  //               message: "Error set team status",
+  //               error
+  //             })
+  //             return;
+  //           })
+  //       }
+  //       // Send email 
+  //       await SingleMailService({
+  //           mailtype: `reg_${status}`,
+  //           subject: "Informasi Pendaftaran",
+  //           receiver: email,
+  //           maildata: {name: getTeamFromEmail.name}
+  //         })
+  //         .then(() => {
+  //           res.status(200).json({
+  //             message: "Email sended; Set status success"
+  //           })
+  //         })
+  //         .catch(error => {
+  //           res.status(400).json({
+  //             message: "Email not sended",
+  //             error
+  //           })
+  //         })
+  //     })
+  //     .catch(err => {
+  //       res.status(400).json({
+  //         message: "There is an error",
+  //         err
+  //       })
+  //     })
+  // }
 
   async checkToken(req: Request, res: Response) {
     let getToken: string

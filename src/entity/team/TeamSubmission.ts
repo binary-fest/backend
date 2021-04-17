@@ -1,6 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Team } from "./Team";
 import { SubmissionToken } from "./SubmissionToken";
+import { EmailSend } from "./EmailSend";
 
 export enum SubmissionStatus{
   pending = "pending",
@@ -31,5 +32,8 @@ export class TeamSubmission {
 
   @OneToOne(() => SubmissionToken, submissionToken => submissionToken.teamSubmission)
   submissionToken: SubmissionToken
+
+  @OneToOne(() => EmailSend, emailsend => emailsend.teamSubmission)
+  emailsend: EmailSend
 
 }
