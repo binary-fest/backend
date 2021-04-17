@@ -148,40 +148,39 @@
 		{
 		"message": [
 			{
-				"id_team": 3,
-				"name": "Team Angsa",
-				"email": "angsa@gmail.com",
+				"id_team": 10,
+				"name": "Team Bebek",
+				"email": "bebek@gmail.com",
 				"institute": "University of Harvard",
-				"title": "Angsa Iot",
-				"competition_type": "iot",
-				"createdAt": "2021-03-22T07:18:24.990Z",
+				"title": "Bebek UIUX",
+				"competition_type": "uiux",
+				"createdAt": "2021-04-16T15:10:10.524Z",
 				"teamMembers": [
 					{
-						"id_team_member": 4,
-						"name": "Dalmadi",
-						"student_id": "519041055",
+						"id_team_member": 18,
+						"name": "Hasan",
+						"student_id": "51894884",
 						"gender": "man",
 						"isLeader": true,
 						"phone": "87654321"
 					},
 					{
-						"id_team_member": 3,
-						"name": "Dilah",
-						"student_id": "519031188",
+						"id_team_member": 17,
+						"name": "Jamilah",
+						"student_id": "5180883774",
 						"gender": "women",
 						"isLeader": false,
 						"phone": "12345678"
 					}
 				],
-				"teamSubmission": [
-					{
-						"id_team_submission": 2,
-						"submission_type": 1,
-						"url_files": "https://binaryfest.or.id/files",
-						"status": "approved",
-						"createdAt": "2021-03-22T07:18:25.008Z"
-					}
-				]
+				"teamSubmission1": {
+					"id_team_submission": 9,
+					"submission_type": 1,
+					"url_files": "https://binaryfest.or.id/files",
+					"status": "pending",
+					"createdAt": "2021-04-16T15:10:10.531Z"
+				},
+				"teamSubmission2": null
 			},
 			{
 				...another IoT team
@@ -252,7 +251,7 @@
 ###  Team Submission
 #### - Check Submission Token
 - description : cek token submission (token didapat dari email tim ketika status tim 'approved')
-- url : /api/submission/check
+- url : /api/submission/token
 - method : GET
 - request query :
 	```json
