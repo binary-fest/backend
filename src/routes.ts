@@ -81,14 +81,5 @@ export const Routes = [
         controller: TeamController,
         action: "checkToken",
         middleware: noCheck
-    },
-
-    // test send email
-    {
-        method: "get",
-        route: "/api/sendmail/:email",
-        controller: TestController,
-        action: "sendmail",
-        middleware: noCheck
     }
 ];
