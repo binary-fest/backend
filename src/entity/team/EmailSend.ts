@@ -10,7 +10,7 @@ export class EmailSend {
   @Column()
   subject: string
 
-  @Column({type: 'date'})
+  @Column({ default: () => "CURRENT_TIMESTAMP" })
   sendedAt: Date
 
   @OneToOne(() => TeamSubmission, teamSubmission => teamSubmission.emailsend)

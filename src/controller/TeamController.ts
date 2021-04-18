@@ -232,12 +232,16 @@ export class TeamController{
       return;
     }
 
-    // getSubmission.status = TeamStatus[status] as any
+    getSubmission.status = TeamStatus[status] as any
 
     await this.teamSubmissionRepository.save(getSubmission)
       .then(async () => {
+        let getGenerateToken: string
+
         if (status === "approved") {
           const [token, start, expired] = generateToken(to);
+
+          getGenerateToken = token;
 
           const getRecentToken = await this.subTokenRepository.findOne({ teamSubmission: getSubmission }) || this.subTokenRepository.create()
 
@@ -246,11 +250,44 @@ export class TeamController{
               token: token,
               startAt: start,
               expiredAt: expired,
-              teamSubmission: getTeam
+              teamSubmission: getSubmission
             })
-            .then(async () => {})
-            .catch(err => res.status(400).json({message: "Error when save token"}))
+            .then(() => {})
+            .catch((error) => {
+              res.status(400).json({
+                message: "Error set team status",
+                error
+              })
+              return;
+            })
         }
+
+        await SingleMailService({
+          subject, 
+          receiver: to, 
+          maildata: {
+            message,
+            token: getGenerateToken,
+            team: getTeam.name,
+          }
+        })
+        .then(async () => {
+          const emailsend = new EmailSend()
+          emailsend.subject = subject;
+          emailsend.teamSubmission = getSubmission
+          await this.emailSendRepository.save(emailsend)
+            .then(result => {
+              res.status(200).json({
+                message: ["Status was updated", `Email was sended to ${to}`]
+              })
+            })
+        })
+        .catch(err => {
+          res.status(400).json({
+            message: "There is an error",
+            err
+          })
+        })
 
       })
       .catch(err => {
@@ -259,11 +296,6 @@ export class TeamController{
           err
         })
       })
-
-    res.status(200).json({
-      message: "Success",
-      getSubmission
-    })
     
   }
 
