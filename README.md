@@ -104,8 +104,13 @@
 - req :
 	```json
 	{
-		"email": "kuda@gmail.com",
-		"status": "approved"
+		"team": "Team Bebek",
+		"from": "binaryfest@gmail.com",
+		"to": "teambebek@gmail.com",
+		"subject": "Penerimaan BinaryFest",
+		"status": "approved",
+		"message": "...messages",
+		"type": 2
 	}
 	```
 	status : 
@@ -114,7 +119,7 @@
 - res :
 	- success
 		```json
-		"message": "Email sended; Set status success"
+		"message": ["Status was updated", "Email was sended to teambebek@gmail.com"]
 		```
 	- error
 		- email not registered
