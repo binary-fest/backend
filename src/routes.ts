@@ -1,7 +1,6 @@
 import { AuthController } from "./controller/AuthController";
 import { HomeController } from "./controller/HomeController";
 import { TeamController } from "./controller/TeamController";
-import { SendEmailController } from "./controller/SendEmailController";
 import { checkJwt } from "./middleware/checkJwt";
 import { checkRole } from './middleware/checkRole'
 import { noCheck } from "./middleware/noCheck";
