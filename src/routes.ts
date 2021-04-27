@@ -76,7 +76,7 @@ export const Routes = [
     // Token Submission check
     {
         method: "get",
-        route: "/api/submission/token",
+        route: "/api/submission/token/:token",
         controller: TeamController,
         action: "checkToken",
         middleware: noCheck

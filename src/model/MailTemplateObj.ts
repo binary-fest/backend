@@ -1,5 +1,5 @@
 export interface MailTemplateObj {
-  team: string,
-  token: string,
-  message: string,
+  message: string;
+  token: string;
+  link: string;
 }
