@@ -104,13 +104,11 @@
 - req :
 	```json
 	{
-		"team": "Team Bebek",
-		"from": "binaryfest@gmail.com",
-		"to": "teambebek@gmail.com",
-		"subject": "Penerimaan BinaryFest",
-		"status": "approved",
-		"message": "...messages",
-		"type": 2
+		"to": "bagusfarizky89@gmail.com",
+		"submission_type": 1,
+		"status": "APPROVED",
+		"token": "HAbbsh88Ah",
+		"competition_type": "iot"
 	}
 	```
 	status : 
