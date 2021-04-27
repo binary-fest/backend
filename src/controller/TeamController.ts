@@ -262,7 +262,7 @@ export class TeamController{
           receiver: to, 
           maildata: {
             message: getTxtMail.message,
-            token: token,
+            token: statusLower == 'approved' ? token : '',
             link: getTxtMail.link
           }
         })

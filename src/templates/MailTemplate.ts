@@ -7,12 +7,12 @@ export default function MailTemplate(data: MailTemplateObj) {
 	if (data.link !== '') {
 		link = '<center><p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>\n'+
 		'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Link Group</p>\n'+
-		'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">'+data.link+'</p></center>';
+		'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="'+data.link+'">'+data.link+'</a></p></center>';
 	}
 	if (data.token !== '') {
 		token = '<center><p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>\n' +
 			'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Link for Next Submission</p>\n' +
-			'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="https://binaryfest.or.id/submission?token='+data.token+'">click here</p></center>';
+			'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="https://binaryfest.or.id/submission?token='+data.token+'">click here</a></p><br>(https://binaryfest.or.id/submission?token='+data.token+')</center>';
 	}
   return `<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
