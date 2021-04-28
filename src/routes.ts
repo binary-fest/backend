@@ -61,10 +61,18 @@ export const Routes = [
     // Team submission
     {
         method: "post",
-        route: "/api/submission/next",
+        route: "/api/submission",
         controller: TeamController,
         action: "nextSubmission",
-        middleware: [checkJwt, checkRole(['uiux', 'iot'])]
+        middleware: noCheck
+    },
+    // Token Submission check
+    {
+        method: "get",
+        route: "/api/submission/token",
+        controller: TeamController,
+        action: "checkToken",
+        middleware: noCheck
     },
     {
         method: "get",
@@ -73,12 +81,4 @@ export const Routes = [
         action: "getTeamBySubmission",
         middleware: [checkJwt, checkRole(['uiux', 'iot'])]
     },
-    // Token Submission check
-    {
-        method: "get",
-        route: "/api/submission/token/:token",
-        controller: TeamController,
-        action: "checkToken",
-        middleware: noCheck
-    }
 ];

@@ -295,11 +295,11 @@ export class TeamController{
   }
 
   async checkToken(req: Request, res: Response) {
-    const queryToken = req.params.token
+    const { token } = req.body  
     
     await this.subTokenRepository.findOneOrFail({
       relations: ['teamSubmission'],
-      where: {token: queryToken}
+      where: {token: token}
     })
     .then(async (result) => {
       await this.teamSubmissionRepository.findOneOrFail({
@@ -323,6 +323,51 @@ export class TeamController{
         err
       })
     })
+  }
+
+  async nextSubmission(req: Request, res: Response) {
+    const { email, token, file_url } = req.body as { email: string, token: string, file_url: string}
+
+    let getSubFromToken: SubmissionToken
+    let getTeamFromSub: Team
+
+    if (token === "" || token === undefined || !token.trim()) {
+      res.status(200).json({
+        message: "Token undefined"
+      })
+      return;
+    }
+
+    try {
+      getSubFromToken = await this.subTokenRepository.findOneOrFail({
+        relations: ['teamSubmission'],
+        where:{token: token}
+      })
+    } catch (error) {
+      res.status(400).json({
+        message: "Token not valid!"
+      })
+    }
+
+    await this.teamSubmissionRepository.findOneOrFail({
+      relations: ['team'],
+      where: { id_team_submission: getSubFromToken.teamSubmission.id_team_submission }
+    })
+    .then(async (result) => {
+      const saveSubmission2 = new TeamSubmission()
+      saveSubmission2.status = SubmissionStatus.pending
+      saveSubmission2.submission_type = 2
+      saveSubmission2.team = result.team
+      saveSubmission2.url_files = file_url
+
+      await this.teamSubmissionRepository.save(saveSubmission2)
+        .then(() => {
+          res.status(200).json({
+            message: 'Submission 2 was submited'
+          })
+        })
+    })
+    
   }
 
 }
