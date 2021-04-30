@@ -363,7 +363,7 @@ export class TeamController{
     .then(async (result) => {
       if (getSubFromToken.used === true) {
         res.status(400).json({
-          message: "Submission 2 has been submited"
+          message: "2nd submission has been submited"
         })
         return;
       }
@@ -380,9 +380,19 @@ export class TeamController{
           await this.subTokenRepository.save(getSubFromToken)
 
           res.status(200).json({
-            message: 'Submission 2 was submited'
+            message: '2nd submission was submited'
           })
         })
+        .catch((err) => {
+          res.status(400).json({
+            message: "Error when saving data 2nd submission"
+          })
+        })
+    })
+    .catch((err) => {
+      res.status(400).json({
+        message: err
+      })
     })
     
   }

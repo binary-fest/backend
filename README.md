@@ -256,16 +256,17 @@
 - description : cek token submission (token didapat dari email tim ketika status tim 'approved')
 - url : /api/submission/token
 - method : GET
-- request query :
+- req :
 	```json
-	?token=submission_token
+	{
+		"token": "token submission"
+	}
 	```
 - res : 
 	- success
 		```json
 		{
-			"message": "Token found",
-			"team": {
+			"message": {
 				"name": "Team Kura",
 				"email": "kura@gmail.com",
 				"institute": "University of Nevada - Reno"
@@ -286,4 +287,33 @@
 			```json
 			message: error message,
 			err
+			```
+#### - 2nd submission
+- description : menginputkan submission ke-2
+- url : /api/submission
+- method : POST
+- req:
+	```json
+	{
+		"token": "token submission",
+		"file_url": "https://google.com/ccccc"
+	}
+	```
+- res:
+	- success:
+		```json
+		"message": "Submission 2 was submited"
+		```
+	- error:
+		- token undefined
+			```json
+			"message": "Token undefined"
+			```
+		- token not valid
+			```json
+			"message": "Token not valid"
+			```
+		- another error
+			```json
+			"message": "Message error"
 			```
