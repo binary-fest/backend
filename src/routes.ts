@@ -68,7 +68,7 @@ export const Routes = [
     },
     // Token Submission check
     {
-        method: "get",
+        method: "post",
         route: "/api/submission/token",
         controller: TeamController,
         action: "checkToken",
