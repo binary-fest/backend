@@ -245,6 +245,7 @@ export class TeamController{
               token: token,
               startAt: `${dateCount.getFullYear()}-${dateCount.getMonth()}-${dateCount.getDate()}`,
               expiredAt: `2021-05-30`,
+              used: false,
               teamSubmission: getSubmission
             })
             .then(() => {})
@@ -306,13 +307,20 @@ export class TeamController{
         relations: ["team"],
         where: {id_team_submission: result.teamSubmission.id_team_submission}
       })
-      .then((result) => {
+      .then((resSub) => {
+        if (result.used === true) {
+          res.status(400).json({
+            message: "Token has been used"
+          })
+          return;
+        }
+
         res.status(200).json({
           message: {
-            name: result.team.name,
-            institute: result.team.institute,
-            email: result.team.email,
-            competition_type: result.team.competition_type
+            name: resSub.team.name,
+            institute: resSub.team.institute,
+            email: resSub.team.email,
+            competition_type: resSub.team.competition_type
           }
         })
       })
@@ -326,10 +334,9 @@ export class TeamController{
   }
 
   async nextSubmission(req: Request, res: Response) {
-    const { email, token, file_url } = req.body as { email: string, token: string, file_url: string}
+    const { token, file_url } = req.body as { token: string, file_url: string}
 
     let getSubFromToken: SubmissionToken
-    let getTeamFromSub: Team
 
     if (token === "" || token === undefined || !token.trim()) {
       res.status(200).json({
@@ -354,6 +361,13 @@ export class TeamController{
       where: { id_team_submission: getSubFromToken.teamSubmission.id_team_submission }
     })
     .then(async (result) => {
+      if (getSubFromToken.used === true) {
+        res.status(400).json({
+          message: "Submission 2 has been submited"
+        })
+        return;
+      }
+    
       const saveSubmission2 = new TeamSubmission()
       saveSubmission2.status = SubmissionStatus.pending
       saveSubmission2.submission_type = 2
@@ -361,7 +375,10 @@ export class TeamController{
       saveSubmission2.url_files = file_url
 
       await this.teamSubmissionRepository.save(saveSubmission2)
-        .then(() => {
+        .then(async () => {
+          getSubFromToken.used = true
+          await this.subTokenRepository.save(getSubFromToken)
+
           res.status(200).json({
             message: 'Submission 2 was submited'
           })

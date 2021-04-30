@@ -14,6 +14,9 @@ export class SubmissionToken{
     })
     token: string
 
+    @Column({type: 'boolean'})
+    used: Boolean
+
     @Column({type: 'date'})
     startAt: Date
 
