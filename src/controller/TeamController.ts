@@ -296,11 +296,11 @@ export class TeamController{
   }
 
   async checkToken(req: Request, res: Response) {
-    const { token } = req.body  
+    const { token } = req.body as { token: string } 
     
     await this.subTokenRepository.findOneOrFail({
-      relations: ['teamSubmission'],
-      where: {token: token}
+      relations: ["teamSubmission"],
+      where: {token: token.trim()}
     })
     .then(async (result) => {
       await this.teamSubmissionRepository.findOneOrFail({
