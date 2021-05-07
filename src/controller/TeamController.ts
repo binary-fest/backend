@@ -343,11 +343,11 @@ export class TeamController{
   async nextSubmission(req: Request, res: Response) {
     if (Date.now() > this.closeSubmissionDate) {
       res.status(400).json({
-        message: "Registration was closed."
+        message: "Submission was closed."
       })
       return;
     }
-    
+
     const { token, file_url } = req.body as { token: string, file_url: string}
 
     let getSubFromToken: SubmissionToken
