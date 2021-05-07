@@ -18,9 +18,16 @@ export class TeamController{
   private teamSubmissionRepository = getRepository(TeamSubmission)
   private subTokenRepository = getRepository(SubmissionToken)
   private emailSendRepository = getRepository(EmailSend)
+  private closeSubmissionDate = new Date("May 7, 2021 23:59:00").getTime()
 
   async register(req: Request, res: Response){
-      
+    if (Date.now() > this.closeSubmissionDate) {
+      res.status(400).json({
+        message: "Registration was closed."
+      })
+      return;
+    }
+
     const { team, submission, members } = req.body as ReqTeamRegister;
     const checkExistEmail: Team = await this.teamRepository.findOne({ email: team.email })
 
@@ -334,6 +341,13 @@ export class TeamController{
   }
 
   async nextSubmission(req: Request, res: Response) {
+    if (Date.now() > this.closeSubmissionDate) {
+      res.status(400).json({
+        message: "Registration was closed."
+      })
+      return;
+    }
+    
     const { token, file_url } = req.body as { token: string, file_url: string}
 
     let getSubFromToken: SubmissionToken
