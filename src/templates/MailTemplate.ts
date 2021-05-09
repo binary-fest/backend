@@ -4,12 +4,14 @@ export default function MailTemplate(data: MailTemplateObj) {
 	let link = ''
 	let token = ''
 
+	let checkToken = data.token === 'no_token' ? '' : data.token
+
 	if (data.link !== '') {
 		link = '<center><p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>\n'+
 		'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Link Group</p>\n'+
 		'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="'+data.link+'">'+data.link+'</a></p></center>';
 	}
-	if (data.token !== '') {
+	if (checkToken !== '') {
 		token = '<center><p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"> </p>\n' +
 			'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;">Link for Next Submission</p>\n' +
 			'<p style="font-size: 14px; line-height: 1.2; word-break: break-word; mso-line-height-alt: 17px; margin: 0;"><a href="https://binaryfest.or.id/submission?token='+data.token+'">click here</a><br>(https://binaryfest.or.id/submission?token='+data.token+')</p></center>';

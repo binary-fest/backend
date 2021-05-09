@@ -203,6 +203,7 @@ export class TeamController{
   async putStatus(req: Request, res: Response){
     const { to, submission_type, status, token, competition_type } = req.body
     const statusLower = <string> status.toLowerCase()
+    let token_var = submission_type == 2 ? 'no_token' : token
     // Perubahan status harus manjadi approved atau rejected
     const definedAllowStatus = ["approved", "rejected"]
 
@@ -235,7 +236,7 @@ export class TeamController{
 
     if ((TeamStatus[statusLower] === getSubmission.status) || !definedAllowStatus.includes(statusLower)) {
       res.status(400).json({
-        message: "Status invalid, please check!"
+        message: "Status invalid!"
       })
       return;
     }
@@ -249,7 +250,7 @@ export class TeamController{
 
         if (statusLower === "approved") {
           await this.subTokenRepository.save({
-              token: token,
+              token: token_var,
               startAt: `${dateCount.getFullYear()}-${dateCount.getMonth()}-${dateCount.getDate()}`,
               expiredAt: `2021-05-30`,
               used: false,
@@ -270,7 +271,7 @@ export class TeamController{
           receiver: to, 
           maildata: {
             message: getTxtMail.message,
-            token: statusLower == 'approved' ? token : '',
+            token: statusLower == 'approved' ? token_var : '',
             link: getTxtMail.link
           }
         })
